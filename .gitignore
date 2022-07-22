@@ -12,5 +12,4 @@ src/principal/Conexion.java
 # Package Files #
 *.jar
 *.war
-*.java
 *.ear
