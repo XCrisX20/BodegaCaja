@@ -5,8 +5,8 @@ import javax.swing.JOptionPane;
 public class Conexion {
 
     private final String URL = "jdbc:oracle:thin:@localhost:1521:xe";// Driver@MachineName:Port/SID
-    private final String USERID = "Cris";// USER ID
-    private final String PASSW = "Semeolvido15";// PASSW
+    private final String USERID = "HANK";// USER ID
+    private final String PASSW = "hank123";// PASSW
     
     public Connection realizarConexion(){
         try {
