@@ -6,7 +6,6 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
-src/principal/Conexion.java
 # Class Files #
 *.class
 # Package Files #
