@@ -13,3 +13,4 @@ src/principal/Conexion.java
 *.jar
 *.war
 *.ear
+*.txt

@@ -83,7 +83,6 @@ public class Bodega extends javax.swing.JFrame {
         btnAgregar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         panelBotones = new java.awt.Panel();
-        btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         txtBuscarNombre = new javax.swing.JTextField();
         btnBuscar1 = new javax.swing.JButton();
@@ -95,7 +94,6 @@ public class Bodega extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Bodega");
-        setPreferredSize(new java.awt.Dimension(800, 600));
 
         panelBodega.setBackground(new java.awt.Color(180, 41, 55));
         panelBodega.setPreferredSize(new java.awt.Dimension(800, 600));
@@ -300,13 +298,6 @@ public class Bodega extends javax.swing.JFrame {
 
         panelBotones.setBackground(new java.awt.Color(140, 140, 140));
 
-        btnModificar.setText("Modificar");
-        btnModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarActionPerformed(evt);
-            }
-        });
-
         btnEliminar.setText("Eliminar");
         btnEliminar.setPreferredSize(new java.awt.Dimension(70, 30));
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
@@ -320,19 +311,15 @@ public class Bodega extends javax.swing.JFrame {
         panelBotonesLayout.setHorizontalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBotonesLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                .addGap(118, 118, 118)
                 .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25))
+                .addContainerGap(152, Short.MAX_VALUE))
         );
         panelBotonesLayout.setVerticalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBotonesLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27))
         );
 
@@ -535,38 +522,6 @@ public class Bodega extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnAgregarActionPerformed
 
-    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        panelDatos.setEnabled(true);
-        txtID.setEnabled(false);
-        txtBuscarNombre.setEnabled(false);
-        btnAgregar.setText("Actualizar");
-        
-        if (tablaInsumos.getSelectedRow() == -1){
-            JOptionPane.showMessageDialog(null, "Debe seleccionar una sola fila de la tabla", "No hay Seleccion", JOptionPane.INFORMATION_MESSAGE);
-        }else{
-            DefaultTableModel mdl = (DefaultTableModel) tablaInsumos.getModel();
-            txtID.setText(String.valueOf(mdl.getValueAt(tablaInsumos.getSelectedRow(), 0)));
-            txtNombre.setText((String) mdl.getValueAt(tablaInsumos.getSelectedRow(), 1));
-            txtStockActual.setText(String.valueOf(mdl.getValueAt(tablaInsumos.getSelectedRow(), 3)));
-            txtStockCritico.setText(String.valueOf(mdl.getValueAt(tablaInsumos.getSelectedRow(), 4)));
-            
-            for (int i = 0; i < cmbTipoInsumo.getItemCount(); i++){
-                if (cmbTipoInsumo.getItemAt(i).equals(mdl.getValueAt(tablaInsumos.getSelectedRow(), 2))){
-                    cmbTipoInsumo.setSelectedIndex(i);
-                    break;
-                }
-            }
-            for (int i = 0; i < cmbUnidadMedida.getItemCount(); i++){
-                if (cmbUnidadMedida.getItemAt(i).equals(mdl.getValueAt(tablaInsumos.getSelectedRow(), 5))){
-                    cmbUnidadMedida.setSelectedIndex(i);
-                    break;
-                }
-            }
-            
-        }
-        
-    }//GEN-LAST:event_btnModificarActionPerformed
-
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         
         
@@ -651,7 +606,6 @@ public class Bodega extends javax.swing.JFrame {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnEliminar;
-    private javax.swing.JButton btnModificar;
     private javax.swing.JComboBox<String> cmbTipoInsumo;
     private javax.swing.JComboBox<String> cmbUnidadMedida;
     private javax.swing.JScrollPane jScrollPane1;
