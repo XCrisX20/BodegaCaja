@@ -311,9 +311,9 @@ public class Bodega extends javax.swing.JFrame {
         panelBotonesLayout.setHorizontalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBotonesLayout.createSequentialGroup()
-                .addGap(118, 118, 118)
+                .addGap(38, 38, 38)
                 .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(152, Short.MAX_VALUE))
+                .addContainerGap(232, Short.MAX_VALUE))
         );
         panelBotonesLayout.setVerticalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -491,35 +491,7 @@ public class Bodega extends javax.swing.JFrame {
                 borrarCampos();
                 txtNombre.requestFocus();
             }
-        }else{
-            String id = txtID.getText();
-            String nombre = txtNombre.getText();
-            String tipo_insumo = cmbTipoInsumo.getItemAt(cmbTipoInsumo.getSelectedIndex());
-            String unidad_medida = cmbUnidadMedida.getItemAt(cmbUnidadMedida.getSelectedIndex());
-            if (nombre.isEmpty() || txtStockActual.getText().equals("") || txtStockActual.getText() == null || txtStockCritico.getText().equals("") || txtStockCritico.getText() == null){
-                JOptionPane.showMessageDialog(null, "No deben haber Campos Vacios", "Advertencia", JOptionPane.WARNING_MESSAGE);
-            }else{
-                int stock_actual = Integer.parseInt(txtStockActual.getText());
-                int stock_critico = Integer.parseInt(txtStockCritico.getText());
-                
-                String cons = "Update insumo set nombre = '"+nombre+"', tipo_insumo = '"+tipo_insumo+"', unidad_medida = '"+unidad_medida+"', stock_actual = "+stock_actual+", stock_critico = "+stock_critico+" where id_insumo = "+id;
-                
-                try {
-                    Statement stm = conn.createStatement();
-                    stm.executeUpdate(cons);
-                    JOptionPane.showMessageDialog(null, "Se Actualizo Correctamente", "Actualizacion Completa", JOptionPane.INFORMATION_MESSAGE);
-                } catch (SQLException e) {
-                    JOptionPane.showMessageDialog(null, "No se pudo Actualizar", "Error de Actualizacion", JOptionPane.ERROR);
-                }
-                
-            }
-            borrarCampos();
-            btnAgregar.setText("Agregar");
-            llenarTabla();
-            panelDatos.setEnabled(false);
-            
-        }
-        
+        }        
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
