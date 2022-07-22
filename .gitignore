@@ -10,7 +10,7 @@ src/principal/Conexion.java
 # Class Files #
 *.class
 # Package Files #
+*.txt
 *.jar
 *.war
 *.ear
-*.txt
