@@ -3,13 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package puestos;
-
+import java.sql.Connection;
+import principal.Conexion;
+import principal.Login;
 /**
  *
  * @author Hank
  */
 public class Ajuste extends javax.swing.JFrame {
-
+    Conexion conex = new Conexion();
+    Connection conn = conex.realizarConexion();
     /**
      * Creates new form Ajuster
      */
