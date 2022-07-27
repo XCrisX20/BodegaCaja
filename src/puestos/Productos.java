@@ -94,6 +94,11 @@ public class Productos extends javax.swing.JFrame {
         btnVerProducto.setForeground(new java.awt.Color(255, 255, 255));
         btnVerProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/iconos/box.png"))); // NOI18N
         btnVerProducto.setText("Ver Producto");
+        btnVerProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerProductoActionPerformed(evt);
+            }
+        });
         pnlProductos.add(btnVerProducto);
         btnVerProducto.setBounds(24, 375, 153, 41);
 
@@ -128,8 +133,24 @@ public class Productos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        Caja caja = new Caja();
+        caja.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
+
+    private void btnVerProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerProductoActionPerformed
+        if (tblProductos.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(null, "Debe Seleccionar una sola fila", "Seleccion Incorrecta", JOptionPane.WARNING_MESSAGE);
+        }else{
+            DefaultTableModel mdl = (DefaultTableModel) tblProductos.getModel();
+            String id = String.valueOf(mdl.getValueAt(tblProductos.getSelectedRow(), 0));
+            
+            InformacionProducto infProd = new InformacionProducto(Integer.parseInt(id));
+            infProd.setVisible(true);
+            
+            
+        }
+    }//GEN-LAST:event_btnVerProductoActionPerformed
 
     void cargarTabla(){
         

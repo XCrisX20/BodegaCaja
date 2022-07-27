@@ -190,6 +190,7 @@ public class Caja extends javax.swing.JFrame {
     }//GEN-LAST:event_btnActualizarEstadoActionPerformed
 
     private void btnVerProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerProductosActionPerformed
+        this.dispose();
         Productos prd = new Productos();
         prd.setVisible(true);
     }//GEN-LAST:event_btnVerProductosActionPerformed
