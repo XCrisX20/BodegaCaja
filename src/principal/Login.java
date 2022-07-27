@@ -46,7 +46,7 @@ public class Login extends javax.swing.JFrame {
         setResizable(false);
         setSize(new java.awt.Dimension(400, 500));
 
-        panelLogin.setBackground(new java.awt.Color(180, 41, 85));
+        panelLogin.setBackground(new java.awt.Color(86, 101, 115));
 
         lblImagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/images/user1.jpg"))); // NOI18N
@@ -70,7 +70,7 @@ public class Login extends javax.swing.JFrame {
         pswClave.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         pswClave.setForeground(new java.awt.Color(6, 154, 142));
 
-        btnIngresar.setBackground(new java.awt.Color(210, 45, 86));
+        btnIngresar.setBackground(new java.awt.Color(40, 105, 133));
         btnIngresar.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         btnIngresar.setForeground(new java.awt.Color(255, 255, 255));
         btnIngresar.setText("Ingresar");

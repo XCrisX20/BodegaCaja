@@ -29,7 +29,7 @@ public class Caja extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        panelCaja.setBackground(new java.awt.Color(180, 41, 55));
+        panelCaja.setBackground(new java.awt.Color(86, 101, 115));
 
         lblTitulo.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         lblTitulo.setForeground(new java.awt.Color(255, 255, 255));

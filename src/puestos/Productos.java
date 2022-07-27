@@ -38,10 +38,13 @@ public class Productos extends javax.swing.JFrame {
         btnBuscar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Productos");
+        setLocationByPlatform(true);
         setPreferredSize(new java.awt.Dimension(500, 500));
+        setResizable(false);
         setSize(new java.awt.Dimension(500, 500));
 
-        pnlProductos.setBackground(new java.awt.Color(145, 98, 35));
+        pnlProductos.setBackground(new java.awt.Color(86, 101, 115));
         pnlProductos.setLayout(null);
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
@@ -75,7 +78,7 @@ public class Productos extends javax.swing.JFrame {
         }
 
         pnlProductos.add(jScrollPane1);
-        jScrollPane1.setBounds(24, 120, 452, 244);
+        jScrollPane1.setBounds(20, 100, 452, 260);
 
         btnVolver.setBackground(new java.awt.Color(40, 105, 133));
         btnVolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/iconos/arrowLeft.png"))); // NOI18N
@@ -92,34 +95,34 @@ public class Productos extends javax.swing.JFrame {
         btnVerProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/iconos/box.png"))); // NOI18N
         btnVerProducto.setText("Ver Producto");
         pnlProductos.add(btnVerProducto);
-        btnVerProducto.setBounds(24, 375, 153, 59);
+        btnVerProducto.setBounds(24, 375, 153, 41);
 
         btnEliminar.setBackground(new java.awt.Color(40, 105, 133));
         btnEliminar.setForeground(new java.awt.Color(255, 255, 255));
         btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/iconos/trash.png"))); // NOI18N
         btnEliminar.setText("Eliminar");
         pnlProductos.add(btnEliminar);
-        btnEliminar.setBounds(323, 375, 153, 59);
+        btnEliminar.setBounds(323, 375, 153, 40);
         pnlProductos.add(txtBuscarProducto);
-        txtBuscarProducto.setBounds(133, 90, 230, 25);
+        txtBuscarProducto.setBounds(20, 70, 340, 25);
 
         btnBuscar.setBackground(new java.awt.Color(40, 105, 133));
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/iconos/search.png"))); // NOI18N
         pnlProductos.add(btnBuscar);
-        btnBuscar.setBounds(370, 90, 100, 25);
+        btnBuscar.setBounds(370, 70, 100, 25);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnlProductos, javax.swing.GroupLayout.DEFAULT_SIZE, 508, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(pnlProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 42, Short.MAX_VALUE))
+            .addComponent(pnlProductos, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
         );
+
+        getAccessibleContext().setAccessibleDescription("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

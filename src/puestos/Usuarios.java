@@ -45,7 +45,7 @@ public class Usuarios extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        panelUsuarios.setBackground(new java.awt.Color(142, 0, 29));
+        panelUsuarios.setBackground(new java.awt.Color(86, 101, 115));
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));

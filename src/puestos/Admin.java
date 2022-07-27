@@ -53,7 +53,7 @@ public class Admin extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(580, 550));
         setSize(new java.awt.Dimension(0, 0));
 
-        panelAdmin.setBackground(new java.awt.Color(142, 0, 29));
+        panelAdmin.setBackground(new java.awt.Color(86, 101, 115));
         panelAdmin.setPreferredSize(new java.awt.Dimension(500, 450));
         panelAdmin.setLayout(null);
 

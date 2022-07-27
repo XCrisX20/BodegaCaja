@@ -42,7 +42,7 @@
     <Container class="javax.swing.JPanel" name="panelLogin">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="55" green="29" red="b4" type="rgb"/>
+          <Color blue="73" green="65" red="56" type="rgb"/>
         </Property>
       </Properties>
 
@@ -179,7 +179,7 @@
         <Component class="javax.swing.JButton" name="btnIngresar">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="56" green="2d" red="d2" type="rgb"/>
+              <Color blue="85" green="69" red="28" type="rgb"/>
             </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Times New Roman" size="14" style="0"/>

@@ -95,7 +95,7 @@ public class Bodega extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Bodega");
 
-        panelBodega.setBackground(new java.awt.Color(180, 41, 55));
+        panelBodega.setBackground(new java.awt.Color(86, 101, 115));
         panelBodega.setPreferredSize(new java.awt.Dimension(800, 600));
         panelBodega.setLayout(null);
 
