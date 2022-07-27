@@ -63,10 +63,8 @@ public class Bodega extends javax.swing.JFrame {
     private void initComponents() {
 
         panelBodega = new javax.swing.JPanel();
-        btnCerrarSesion = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaInsumos = new javax.swing.JTable();
-        lblId = new javax.swing.JLabel();
         txtID = new javax.swing.JTextField();
         btnBuscar = new javax.swing.JButton();
         panelDatos = new java.awt.Panel();
@@ -83,30 +81,23 @@ public class Bodega extends javax.swing.JFrame {
         btnAgregar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         panelBotones = new java.awt.Panel();
+        btnAjustes = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         txtBuscarNombre = new javax.swing.JTextField();
         btnBuscar1 = new javax.swing.JButton();
-        panel3 = new java.awt.Panel();
-        lblId1 = new javax.swing.JLabel();
-        panel4 = new java.awt.Panel();
-        lblId2 = new javax.swing.JLabel();
         btnAgregarInsumo = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        btnCerrarSesion = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        lblId2 = new javax.swing.JLabel();
+        lblId1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Bodega");
 
         panelBodega.setBackground(new java.awt.Color(86, 101, 115));
         panelBodega.setPreferredSize(new java.awt.Dimension(800, 600));
-        panelBodega.setLayout(null);
-
-        btnCerrarSesion.setText("Cerrar Sesión");
-        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCerrarSesionActionPerformed(evt);
-            }
-        });
-        panelBodega.add(btnCerrarSesion);
-        btnCerrarSesion.setBounds(900, 10, 140, 30);
+        panelBodega.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tablaInsumos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -141,14 +132,7 @@ public class Bodega extends javax.swing.JFrame {
             tablaInsumos.getColumnModel().getColumn(5).setResizable(false);
         }
 
-        panelBodega.add(jScrollPane1);
-        jScrollPane1.setBounds(380, 110, 640, 360);
-
-        lblId.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        lblId.setForeground(new java.awt.Color(255, 255, 255));
-        lblId.setText("Agregar Nuevo Insumos");
-        panelBodega.add(lblId);
-        lblId.setBounds(30, 50, 200, 30);
+        panelBodega.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 160, 640, 360));
 
         txtID.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
@@ -165,31 +149,38 @@ public class Bodega extends javax.swing.JFrame {
                 txtIDKeyTyped(evt);
             }
         });
-        panelBodega.add(txtID);
-        txtID.setBounds(380, 70, 140, 30);
+        panelBodega.add(txtID, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 120, 190, 30));
 
+        btnBuscar.setBackground(new java.awt.Color(40, 105, 133));
+        btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
         btnBuscar.setText("Buscar");
-        panelBodega.add(btnBuscar);
-        btnBuscar.setBounds(540, 70, 110, 30);
+        btnBuscar.setBorder(null);
+        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        panelBodega.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 120, 110, 30));
 
-        panelDatos.setBackground(new java.awt.Color(140, 140, 140));
+        panelDatos.setBackground(new java.awt.Color(40, 105, 133));
         panelDatos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         panelDatos.setEnabled(false);
         panelDatos.setName(""); // NOI18N
 
         lblNombre.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        lblNombre.setForeground(new java.awt.Color(255, 255, 255));
         lblNombre.setText("Nombre");
 
         lblTipo.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        lblTipo.setForeground(new java.awt.Color(255, 255, 255));
         lblTipo.setText("Tipo Insumo");
 
         lblStockActual.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        lblStockActual.setForeground(new java.awt.Color(255, 255, 255));
         lblStockActual.setText("Stock Actual");
 
         lblStockCritico.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        lblStockCritico.setForeground(new java.awt.Color(255, 255, 255));
         lblStockCritico.setText("Stock Critico");
 
         lblUnidadMedida.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        lblUnidadMedida.setForeground(new java.awt.Color(255, 255, 255));
         lblUnidadMedida.setText("Unidad medida");
 
         cmbUnidadMedida.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -219,7 +210,11 @@ public class Bodega extends javax.swing.JFrame {
             }
         });
 
+        btnAgregar.setBackground(new java.awt.Color(40, 105, 133));
+        btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregar.setText("Agregar");
+        btnAgregar.setBorder(null);
+        btnAgregar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAgregar.setPreferredSize(new java.awt.Dimension(70, 30));
         btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -227,7 +222,11 @@ public class Bodega extends javax.swing.JFrame {
             }
         });
 
+        btnCancelar.setBackground(new java.awt.Color(40, 105, 133));
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
         btnCancelar.setText("Cancelar");
+        btnCancelar.setBorder(null);
+        btnCancelar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelarActionPerformed(evt);
@@ -293,12 +292,27 @@ public class Bodega extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelBodega.add(panelDatos);
-        panelDatos.setBounds(20, 160, 340, 320);
+        panelBodega.add(panelDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, -1, 320));
 
         panelBotones.setBackground(new java.awt.Color(140, 140, 140));
 
+        btnAjustes.setBackground(new java.awt.Color(40, 105, 133));
+        btnAjustes.setForeground(new java.awt.Color(255, 255, 255));
+        btnAjustes.setText("Ajustes");
+        btnAjustes.setBorder(null);
+        btnAjustes.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAjustes.setPreferredSize(new java.awt.Dimension(70, 30));
+        btnAjustes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAjustesActionPerformed(evt);
+            }
+        });
+
+        btnEliminar.setBackground(new java.awt.Color(40, 105, 133));
+        btnEliminar.setForeground(new java.awt.Color(255, 255, 255));
         btnEliminar.setText("Eliminar");
+        btnEliminar.setBorder(null);
+        btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnEliminar.setPreferredSize(new java.awt.Dimension(70, 30));
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -311,89 +325,100 @@ public class Bodega extends javax.swing.JFrame {
         panelBotonesLayout.setHorizontalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBotonesLayout.createSequentialGroup()
-                .addGap(128, 128, 128)
+                .addGap(18, 18, 18)
+                .addComponent(btnAjustes, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
                 .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(142, Short.MAX_VALUE))
+                .addContainerGap())
         );
         panelBotonesLayout.setVerticalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBotonesLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAjustes, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27))
         );
 
-        panelBodega.add(panelBotones);
-        panelBotones.setBounds(590, 500, 420, 70);
-        panelBodega.add(txtBuscarNombre);
-        txtBuscarNombre.setBounds(730, 70, 140, 30);
+        panelBodega.add(panelBotones, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 530, 450, 60));
+        panelBodega.add(txtBuscarNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 120, 200, 30));
 
+        btnBuscar1.setBackground(new java.awt.Color(40, 105, 133));
+        btnBuscar1.setForeground(new java.awt.Color(255, 255, 255));
         btnBuscar1.setText("Buscar");
-        panelBodega.add(btnBuscar1);
-        btnBuscar1.setBounds(890, 70, 110, 30);
+        btnBuscar1.setBorder(null);
+        btnBuscar1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        panelBodega.add(btnBuscar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 120, 110, 30));
 
-        panel3.setBackground(new java.awt.Color(140, 140, 140));
-
-        lblId1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        lblId1.setForeground(new java.awt.Color(255, 255, 255));
-        lblId1.setText("ID");
-
-        javax.swing.GroupLayout panel3Layout = new javax.swing.GroupLayout(panel3);
-        panel3.setLayout(panel3Layout);
-        panel3Layout.setHorizontalGroup(
-            panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel3Layout.createSequentialGroup()
-                .addComponent(lblId1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 70, Short.MAX_VALUE))
-        );
-        panel3Layout.setVerticalGroup(
-            panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel3Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(lblId1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        panelBodega.add(panel3);
-        panel3.setBounds(380, 30, 100, 30);
-
-        panel4.setBackground(new java.awt.Color(140, 140, 140));
-
-        lblId2.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        lblId2.setForeground(new java.awt.Color(255, 255, 255));
-        lblId2.setText("Nombre");
-
-        javax.swing.GroupLayout panel4Layout = new javax.swing.GroupLayout(panel4);
-        panel4.setLayout(panel4Layout);
-        panel4Layout.setHorizontalGroup(
-            panel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel4Layout.createSequentialGroup()
-                .addComponent(lblId2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 30, Short.MAX_VALUE))
-        );
-        panel4Layout.setVerticalGroup(
-            panel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel4Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(lblId2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        panelBodega.add(panel4);
-        panel4.setBounds(730, 30, 100, 30);
-
+        btnAgregarInsumo.setBackground(new java.awt.Color(40, 105, 133));
+        btnAgregarInsumo.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregarInsumo.setText("Agregar Nuevo Insumo");
+        btnAgregarInsumo.setBorder(null);
+        btnAgregarInsumo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAgregarInsumo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgregarInsumoActionPerformed(evt);
             }
         });
-        panelBodega.add(btnAgregarInsumo);
-        btnAgregarInsumo.setBounds(70, 100, 180, 40);
+        panelBodega.add(btnAgregarInsumo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 180, 40));
+
+        jPanel1.setBackground(new java.awt.Color(40, 105, 133));
+
+        btnCerrarSesion.setBackground(new java.awt.Color(40, 105, 133));
+        btnCerrarSesion.setForeground(new java.awt.Color(255, 255, 255));
+        btnCerrarSesion.setText("Cerrar Sesión");
+        btnCerrarSesion.setBorder(null);
+        btnCerrarSesion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarSesionActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel1.setText("Bodega");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 771, Short.MAX_VALUE)
+                .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        panelBodega.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1110, 50));
+
+        lblId2.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        lblId2.setForeground(new java.awt.Color(255, 255, 255));
+        lblId2.setText("Nombre");
+        panelBodega.add(lblId2, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 90, 70, 30));
+
+        lblId1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        lblId1.setForeground(new java.awt.Color(255, 255, 255));
+        lblId1.setText("ID");
+        panelBodega.add(lblId1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 90, 30, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBodega, javax.swing.GroupLayout.DEFAULT_SIZE, 1108, Short.MAX_VALUE)
+            .addComponent(panelBodega, javax.swing.GroupLayout.DEFAULT_SIZE, 1110, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -560,6 +585,11 @@ public class Bodega extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtIDKeyTyped
 
+    private void btnAjustesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjustesActionPerformed
+        Ajuste aj = new Ajuste();
+        aj.setVisible(true);
+    }//GEN-LAST:event_btnAjustesActionPerformed
+
     
     public static void main(String args[]) {
         
@@ -573,6 +603,7 @@ public class Bodega extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnAgregarInsumo;
+    private javax.swing.JButton btnAjustes;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnBuscar1;
     private javax.swing.JButton btnCancelar;
@@ -580,8 +611,9 @@ public class Bodega extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JComboBox<String> cmbTipoInsumo;
     private javax.swing.JComboBox<String> cmbUnidadMedida;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblId1;
     private javax.swing.JLabel lblId2;
     private javax.swing.JLabel lblNombre;
@@ -589,8 +621,6 @@ public class Bodega extends javax.swing.JFrame {
     private javax.swing.JLabel lblStockCritico;
     private javax.swing.JLabel lblTipo;
     private javax.swing.JLabel lblUnidadMedida;
-    private java.awt.Panel panel3;
-    private java.awt.Panel panel4;
     private javax.swing.JPanel panelBodega;
     private java.awt.Panel panelBotones;
     private java.awt.Panel panelDatos;
