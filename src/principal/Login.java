@@ -172,7 +172,7 @@ public class Login extends javax.swing.JFrame {
         String pssw = new String(pswClave.getPassword());
         boolean ingreso = false;
         String t_emp = ""; 
-        
+        String rut_empleado ="";
         if (user.isEmpty() || pssw.isEmpty()){
             JOptionPane.showMessageDialog(null, "Los campos no pueden estar Vacios", "Error de ingreso", JOptionPane.WARNING_MESSAGE);
         }else{
@@ -183,6 +183,7 @@ public class Login extends javax.swing.JFrame {
                     if (user.equals(rs.getString("usuario")) && pssw.equals(rs.getString("clave"))){
                         ingreso = true;
                         t_emp = rs.getString("t_empleado");
+                        rut_empleado = rs.getString("rut_empleado");
                     }
                 }
                 if (!ingreso){
@@ -202,7 +203,7 @@ public class Login extends javax.swing.JFrame {
                             break;
                         case "C":
                             this.setVisible(false);
-                            Caja caj = new Caja();
+                            Caja caj = new Caja(rut_empleado);
                             caj.setVisible(true);
                             break;
                         default:

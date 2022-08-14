@@ -5,10 +5,15 @@ import principal.Login;
 
 
 public class Caja extends javax.swing.JFrame {
-
+    private String rut_empleado;
     int xMouse;
     int yMouse;
     
+    public Caja(String rut_empleado) {
+        this.rut_empleado = rut_empleado;
+        initComponents();
+    }
+
     public Caja() {
         initComponents();
     }
@@ -176,7 +181,8 @@ public class Caja extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void btnNuevaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaVentaActionPerformed
-        // TODO add your handling code here:
+        RealizarVenta rv = new RealizarVenta(rut_empleado);
+        rv.setVisible(true);
     }//GEN-LAST:event_btnNuevaVentaActionPerformed
 
     private void btnActualizarEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarEstadoActionPerformed

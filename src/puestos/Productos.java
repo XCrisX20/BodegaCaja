@@ -38,16 +38,19 @@ public class Productos extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         btnVolver = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        btnAgregarProducto = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Productos");
         setLocationByPlatform(true);
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(500, 500));
+        setPreferredSize(new java.awt.Dimension(550, 550));
         setResizable(false);
-        setSize(new java.awt.Dimension(500, 500));
+        setSize(new java.awt.Dimension(550, 550));
 
         pnlProductos.setBackground(new java.awt.Color(86, 101, 115));
+        pnlProductos.setMinimumSize(new java.awt.Dimension(550, 550));
+        pnlProductos.setPreferredSize(new java.awt.Dimension(550, 550));
         pnlProductos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tblProductos.setModel(new javax.swing.table.DefaultTableModel(
@@ -74,7 +77,7 @@ public class Productos extends javax.swing.JFrame {
             tblProductos.getColumnModel().getColumn(3).setResizable(false);
         }
 
-        pnlProductos.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 460, 280));
+        pnlProductos.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 510, 300));
 
         btnVerProducto.setBackground(new java.awt.Color(40, 105, 133));
         btnVerProducto.setForeground(new java.awt.Color(255, 255, 255));
@@ -93,12 +96,12 @@ public class Productos extends javax.swing.JFrame {
         btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/iconos/trash.png"))); // NOI18N
         btnEliminar.setText("Eliminar");
         btnEliminar.setBorder(null);
-        pnlProductos.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 440, 153, 40));
-        pnlProductos.add(txtBuscarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 95, 340, 30));
+        pnlProductos.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(375, 440, 153, 40));
+        pnlProductos.add(txtBuscarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 390, 30));
 
         btnBuscar.setBackground(new java.awt.Color(40, 105, 133));
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/iconos/search.png"))); // NOI18N
-        pnlProductos.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 95, 110, 30));
+        pnlProductos.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 80, 110, 30));
 
         jPanel1.setBackground(new java.awt.Color(40, 105, 133));
         jPanel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -134,7 +137,7 @@ public class Productos extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 200, Short.MAX_VALUE)
                 .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -150,17 +153,29 @@ public class Productos extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pnlProductos.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 50));
+        pnlProductos.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 550, 50));
+
+        btnAgregarProducto.setBackground(new java.awt.Color(40, 105, 133));
+        btnAgregarProducto.setForeground(new java.awt.Color(255, 255, 255));
+        btnAgregarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/iconos/add_product2.png"))); // NOI18N
+        btnAgregarProducto.setText("Agregar Producto");
+        btnAgregarProducto.setBorder(null);
+        btnAgregarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarProductoActionPerformed(evt);
+            }
+        });
+        pnlProductos.add(btnAgregarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 440, 153, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnlProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 460, Short.MAX_VALUE)
+            .addComponent(pnlProductos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         getAccessibleContext().setAccessibleDescription("");
@@ -198,6 +213,13 @@ public class Productos extends javax.swing.JFrame {
         int y = evt.getYOnScreen();
         this.setLocation(x - xMouse, y - yMouse);
     }//GEN-LAST:event_jPanel1MouseDragged
+
+    private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
+        
+        AgregarProducto addProd = new AgregarProducto();
+        addProd.setVisible(true);
+            
+    }//GEN-LAST:event_btnAgregarProductoActionPerformed
 
     void cargarTabla(){
         
@@ -242,6 +264,7 @@ public class Productos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregarProducto;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnVerProducto;

@@ -307,14 +307,14 @@ public class Admin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVerUsuariosActionPerformed
 
     private void btnAgregarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarUsuarioActionPerformed
-        String rut = txtRut.getText();
+        String rut = txtRut.getText().trim();
         boolean val = validarRUT(rut);
         if(!val){
             JOptionPane.showMessageDialog(null, "El Rut no es Correcto", "Rut Incorrecto",JOptionPane.ERROR_MESSAGE);
             return;
         }
-        String nombre = txtNombre.getText();
-        String usuario = txtUser.getText();
+        String nombre = txtNombre.getText().trim();
+        String usuario = txtUser.getText().trim();
         String clave = String.valueOf(jpClave.getPassword());
         String rb = "N";
         if (rbBodeguero.isSelected()) rb = "B";
@@ -323,16 +323,44 @@ public class Admin extends javax.swing.JFrame {
         if (rut.isEmpty() || nombre.isEmpty() || usuario.isEmpty() || clave.isEmpty()){
             JOptionPane.showMessageDialog(null, "Los campos no deben quedar Vacios", "Fallo Insercion", JOptionPane.WARNING_MESSAGE);
         }else{
-            String cons = "Insert into empleadott (rut_empleado, nombre_completo, usuario, clave, t_empleado) values('"+rut+"','"+nombre+"','"+usuario+"','"+clave+"','"+rb+"')";
+            String consRut = "Select * from empleadott where rut_empleado = '"+rut+"'";
             try{
-                Statement stm = conn.createStatement();
-                stm.executeUpdate(cons);
-                JOptionPane.showMessageDialog(null, "Usuario Ingresado", "Usuario Ingresado", JOptionPane.INFORMATION_MESSAGE);
+                Statement stm1 = conn.createStatement();
+                ResultSet rs = stm1.executeQuery(consRut);
+                if(rs.next()){
+                    JOptionPane.showMessageDialog(null, "El rut ingresado ya Existe","Insercion Incorrecta",JOptionPane.ERROR_MESSAGE);
+                }else{
+                    String consEmpleados = "Select * from empleadott";
+                    try{
+                        Statement stm2 = conn.createStatement();
+                        ResultSet rs2 = stm2.executeQuery(consEmpleados);
+                        boolean existe = false;
+                        while(rs2.next()){
+                            if(rs2.getString("usuario").toUpperCase().equalsIgnoreCase(usuario)){
+                                existe = true;
+                            }
+                        }
+                        if(!existe){
+                            String cons = "Insert into empleadott (rut_empleado, nombre_completo, usuario, clave, t_empleado) values('"+rut+"','"+nombre+"','"+usuario+"','"+clave+"','"+rb+"')";
+                            try{
+                                Statement stm = conn.createStatement();
+                                stm.executeUpdate(cons);
+                                JOptionPane.showMessageDialog(null, "Usuario Ingresado", "Usuario Ingresado", JOptionPane.INFORMATION_MESSAGE);
+                            }catch(SQLException ex){
+                                JOptionPane.showMessageDialog(null, "Error al Agregar Usuario", "Error de Insercion", JOptionPane.ERROR);
+                            }
+                            borrarCampos();
+                            txtRut.requestFocus();
+                        }else{
+                            JOptionPane.showMessageDialog(null, "El usuario ingresado ya existe!","Usuario Incorrecto",JOptionPane.WARNING_MESSAGE);
+                        }
+                    }catch(SQLException ex){
+                        System.out.println(ex);
+                    }
+                }
             }catch(SQLException ex){
-                JOptionPane.showMessageDialog(null, "Error al Agregar Usuario", "Error de Insercion", JOptionPane.ERROR);
+                System.out.println(ex);
             }
-            borrarCampos();
-            txtRut.requestFocus();
         }
     }//GEN-LAST:event_btnAgregarUsuarioActionPerformed
 
