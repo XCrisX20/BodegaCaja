@@ -6,6 +6,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import principal.Conexion;
@@ -16,8 +17,8 @@ public class RealizarVenta extends javax.swing.JFrame {
     Conexion conex = new Conexion();
     Connection conn = conex.realizarConexion();
     private String rut_empleado;
-    private String fecha_usar;
     private ArrayList<Producto> productos_lista = new ArrayList<>();
+    Timestamp fecha_guardar;
     int idVenta = 0;
     int xMouse;
     int yMouse;
@@ -26,6 +27,7 @@ public class RealizarVenta extends javax.swing.JFrame {
     public RealizarVenta(String rut_empleado) {
         this.rut_empleado = rut_empleado;
         initComponents();
+        llenarTablaPendientes();
         llenarTabla();
         txtCantidad.setText("1");
         llenarComboBox();
@@ -35,47 +37,62 @@ public class RealizarVenta extends javax.swing.JFrame {
     
     public RealizarVenta() {}
 
-    private void llenarTabla(){
-        if(idVenta != 0){
-            DefaultTableModel mdl = (DefaultTableModel) tblProductos_venta.getModel();
-            mdl.setRowCount(0);
-            String cons = "Select * from productos_venta where id_venta = "+idVenta;
-            try{
-                Statement stm = conn.createStatement();
-                ResultSet rs = stm.executeQuery(cons);
-                while(rs.next()){
-                    mdl.addRow(new Object[]{
-                        rs.getInt("id_producto"), rs.getInt("id_venta"), rs.getInt("cantidad")
-                    });
-                    tblProductos_venta.setModel(mdl);
-                }
-            }catch(SQLException ex){
-                JOptionPane.showMessageDialog(null, "Error al obtener datos de la venta","Error al obtener datos",JOptionPane.ERROR);
-            }
-        }else{
-            int suma = 0;
-            txtTotal.setText("$ 0");
-            DefaultTableModel mdl = (DefaultTableModel) tblProductos_venta.getModel();
-            mdl.setRowCount(0);
-            for(Producto p: productos_lista){
+    
+    private void llenarTablaPendientes(){
+        DefaultTableModel mdl = (DefaultTableModel) tblVentasPendientes.getModel();
+        mdl.setRowCount(0);
+        String cons = "Select * from ventas where estado_venta = 'P'";
+        String tv = "", tp = "", estado_venta = "";
+        try{
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery(cons);
+            while(rs.next()){
+                if(rs.getString("tipo_venta").equalsIgnoreCase("P")) tv = "Presencial";
+                if(rs.getString("tipo_venta").equalsIgnoreCase("E")) tv = "Encargo";
+                if(rs.getString("tipo_pago").equalsIgnoreCase("E")) tp = "Efectivo";
+                if(rs.getString("tipo_pago").equalsIgnoreCase("D")) tp = "Debito";
+                if(rs.getString("estado_venta").equalsIgnoreCase("A")) estado_venta = "Aprobado";
+                if(rs.getString("estado_venta").equalsIgnoreCase("C")) estado_venta = "Cancelado";
+                if(rs.getString("estado_venta").equalsIgnoreCase("P")) estado_venta = "Pendiente";
+                
                 mdl.addRow(new Object[]{
-                    p.getId_producto(), p.getNombre(), p.getCantidad(), p.getPrecio(), p.getTotal()
+                    rs.getInt("id_venta"), rs.getString("fecha_hora"), tv, tp, rs.getString("telefono"), rs.getString("nombre_pedido"),
+                    rs.getInt("total_pago"),estado_venta
                 });
-                suma += p.getTotal();
-                txtTotal.setText("$ " + String.valueOf(suma));
-                tblProductos_venta.setModel(mdl);
             }
+            tblVentasPendientes.setModel(mdl);
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "Error al obtener datos de las ventas", "Error de obtencion", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void llenarTabla(){
+        int suma = 0;
+        txtTotal.setText("$ 0");
+        DefaultTableModel mdl = (DefaultTableModel) tblProductos_venta.getModel();
+        mdl.setRowCount(0);
+        for(Producto p: productos_lista){
+            mdl.addRow(new Object[]{
+                p.getId_producto(), p.getNombre(), p.getCantidad(), p.getPrecio(), p.getTotal()
+            });
+            suma += p.getTotal();
+            txtTotal.setText("$ " + String.valueOf(suma));
+            tblProductos_venta.setModel(mdl);
         }
         
         
+        
+    }
+    public static Timestamp convert(Date date) {
+        return new Timestamp(date.getTime());
     }
     
-    
     private void configurarFecha_Hora(){
-        String dateTime = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now());
-        //String dateTime2 = DateTimeFormatter.ofPattern("DD-Mon-RR HH24:MI:SS.FF").format(LocalDateTime.now());
+        String dateTime = DateTimeFormatter.ofPattern("dd-MM-YYYY hh:mm").format(LocalDateTime.now());
         txtFecha.setText(dateTime);
-        //fecha_usar = dateTime2;
+        
+        //Date utilDate = new Date();
+        //fecha_guardar = convert(utilDate);
     }
     private void agregarBuscador(){
         AutoCompleteDecorator.decorate(cmbProductos);
@@ -115,6 +132,13 @@ public class RealizarVenta extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         txtTotal = new javax.swing.JTextField();
         btnEliminar = new javax.swing.JButton();
+        jdVentasPendientes = new javax.swing.JDialog();
+        jPanel5 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblVentasPendientes = new javax.swing.JTable();
+        jLabel12 = new javax.swing.JLabel();
+        cmbEstadoVenta = new javax.swing.JComboBox<>();
+        btnEstadoVenta = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -142,7 +166,6 @@ public class RealizarVenta extends javax.swing.JFrame {
         jdAgregarProducto.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         jdAgregarProducto.setTitle("AgregarProductos");
         jdAgregarProducto.setBackground(new java.awt.Color(86, 101, 115));
-        jdAgregarProducto.setPreferredSize(new java.awt.Dimension(420, 450));
         jdAgregarProducto.setResizable(false);
         jdAgregarProducto.setSize(new java.awt.Dimension(420, 450));
         jdAgregarProducto.setType(java.awt.Window.Type.POPUP);
@@ -238,6 +261,97 @@ public class RealizarVenta extends javax.swing.JFrame {
         jdAgregarProductoLayout.setVerticalGroup(
             jdAgregarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
+        );
+
+        jdVentasPendientes.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        jdVentasPendientes.setResizable(false);
+        jdVentasPendientes.setSize(new java.awt.Dimension(650, 450));
+        jdVentasPendientes.setType(java.awt.Window.Type.POPUP);
+
+        jPanel5.setBackground(new java.awt.Color(86, 101, 115));
+        jPanel5.setPreferredSize(new java.awt.Dimension(650, 450));
+
+        tblVentasPendientes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Fecha", "Tipo Venta", "Tipo Pago", "Telefono", "Nombre Pedido", "Total", "Estado"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tblVentasPendientes);
+        if (tblVentasPendientes.getColumnModel().getColumnCount() > 0) {
+            tblVentasPendientes.getColumnModel().getColumn(0).setResizable(false);
+            tblVentasPendientes.getColumnModel().getColumn(1).setResizable(false);
+            tblVentasPendientes.getColumnModel().getColumn(2).setResizable(false);
+            tblVentasPendientes.getColumnModel().getColumn(3).setResizable(false);
+            tblVentasPendientes.getColumnModel().getColumn(4).setResizable(false);
+            tblVentasPendientes.getColumnModel().getColumn(5).setResizable(false);
+            tblVentasPendientes.getColumnModel().getColumn(6).setResizable(false);
+            tblVentasPendientes.getColumnModel().getColumn(7).setResizable(false);
+        }
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("Ventas Pendientes");
+
+        cmbEstadoVenta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pendiente", "Aprobado", "Cancelado" }));
+
+        btnEstadoVenta.setBackground(new java.awt.Color(40, 105, 133));
+        btnEstadoVenta.setForeground(new java.awt.Color(255, 255, 255));
+        btnEstadoVenta.setText("Cambiar Estado Venta");
+        btnEstadoVenta.setBorder(null);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cmbEstadoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnEstadoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbEstadoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEstadoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27))
+        );
+
+        javax.swing.GroupLayout jdVentasPendientesLayout = new javax.swing.GroupLayout(jdVentasPendientes.getContentPane());
+        jdVentasPendientes.getContentPane().setLayout(jdVentasPendientesLayout);
+        jdVentasPendientesLayout.setHorizontalGroup(
+            jdVentasPendientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        jdVentasPendientesLayout.setVerticalGroup(
+            jdVentasPendientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -360,8 +474,27 @@ public class RealizarVenta extends javax.swing.JFrame {
         jTextField1.setText("+569");
         jTextField1.setEnabled(false);
 
+        txtTelefono.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                txtTelefonoInputMethodTextChanged(evt);
+            }
+        });
+        txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTelefonoKeyTyped(evt);
+            }
+        });
+
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("Nombre Pedido:");
+
+        txtNombrePedido.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombrePedidoKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -547,54 +680,105 @@ public class RealizarVenta extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnAgregarColaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarColaActionPerformed
+        if(productos_lista.isEmpty()){
+            JOptionPane.showMessageDialog(null, "No se han Asociado Productos a la venta","Venta sin productos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         String tv = "";
         String tp = "";
-        if(rbEncargo.isSelected()) tv = rbEncargo.getText();
-        if(rbPresencial.isSelected()) tv = rbPresencial.getText();
-        if(rbEfectivo.isSelected()) tp = rbEfectivo.getText();
-        if(rbDebito.isSelected()) tv = rbDebito.getText();
-        String estadoVenta = "Pendiente";
+        if(rbEncargo.isSelected()) tv = "E";
+        if(rbPresencial.isSelected()) tv = "P";
+        if(rbEfectivo.isSelected()) tp = "E";
+        if(rbDebito.isSelected()) tv = "D";
+        String estadoVenta = "P";
         
+        String valor_pagar = txtTotal.getText().substring(txtTotal.getText().indexOf("$")+1).trim();
+        int totalPagar = Integer.parseInt(valor_pagar);
+
         String cons = "Insert into ventas (fecha_hora, tipo_venta, total_pago, tipo_pago, rut_empleado, telefono, nombre_pedido, estado_venta)"
-                + "values('21-mar-15 11:20:10.123000','"+tv+"',"+txtTotal.getText()+",'"+tp+"','"+rut_empleado+"','"+txtTelefono.getText()+"','"+txtNombrePedido.getText()+"','"+estadoVenta+"')";
+                + "values(CAST(sysdate AS TIMESTAMP),'"+tv+"',"+totalPagar+",'"+tp+"','"+rut_empleado+"','"+txtTelefono.getText()+"','"+txtNombrePedido.getText()+"','"+estadoVenta+"')";
         
         //ingresar la venta
         try{
             Statement stm = conn.createStatement();
             stm.executeUpdate(cons);
         }catch(SQLException ex){
-            JOptionPane.showMessageDialog(null, "Error al ingresar la venta", "error de insercion", JOptionPane.ERROR);
+            JOptionPane.showMessageDialog(null, "Error al Ingresar la Venta "+ex, "Error de Insercion", JOptionPane.ERROR_MESSAGE);
         
         }
         
-        
         //obtener la ultima venta generada
-        String cons2 = "Select max(id_venta) from ventas";
+        String cons2 = "Select max(id_venta) as id from ventas";
         try{
             Statement stm2 = conn.createStatement();
             ResultSet rs = stm2.executeQuery(cons2);
             if(rs.next()){
-                idVenta = rs.getInt("id_venta");
+                idVenta = rs.getInt("id");
             }
         }catch(SQLException ex){
-            JOptionPane.showMessageDialog(null, "Error al Obtener la ultima venta", "error de obtencion", JOptionPane.ERROR);
+            JOptionPane.showMessageDialog(null, "No se pudo obtener la ultima venta "+ex, "Error de obtencion", JOptionPane.ERROR_MESSAGE);
         }
-        
         //Guardar Registros de los productos de la venta
-        
-        String cons3 = "";
-        for(Producto e: productos_lista){
-            cons3 = "Insert into productos_venta (id_producto, id_venta, cantidad)"
-                    + "values("+idVenta+","+e.getId_producto()+","+e.getCantidad()+")";
+        if (idVenta != 0){
+           String cons3 = "";
+            for(Producto e: productos_lista){
+                cons3 = "Insert into productos_venta (id_producto, id_venta, cantidad)"
+                    + "values("+e.getId_producto()+","+idVenta+","+e.getCantidad()+")";
+                try{
+                    Statement stm3 = conn.createStatement();
+                    stm3.executeUpdate(cons3);
+                }catch(SQLException ex){
+                    JOptionPane.showMessageDialog(null, "Error al Ingresar el Producto asociado a la venta "+ex, "Error de Insercion", JOptionPane.ERROR_MESSAGE);
+                }
+            } 
         }
+        
+        
+        productos_lista.clear();
+        llenarTabla();
+        configurarFecha_Hora();
+        rbEfectivo.setSelected(true);
+        rbPresencial.setSelected(true);
+        txtTelefono.setText("");
+        txtNombrePedido.setText("");
+        txtTelefono.setRequestFocusEnabled(true);
+        idVenta = 0;
         
         JOptionPane.showMessageDialog(null, "La Venta se Creo Exitosamente, Se agrego a la Fila","Venta Creada", JOptionPane.INFORMATION_MESSAGE);
         
     }//GEN-LAST:event_btnAgregarColaActionPerformed
 
     private void btnVerVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerVentasActionPerformed
-        
+        jdVentasPendientes.setVisible(true);
     }//GEN-LAST:event_btnVerVentasActionPerformed
+
+    private void txtNombrePedidoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombrePedidoKeyTyped
+        int key = evt.getKeyChar();
+
+        boolean mayusculas = key >= 65 && key <= 90;
+        boolean minusculas = key >= 97 && key <= 122;
+        boolean espacio = key == 32;
+
+         if (!(minusculas || mayusculas || espacio))
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombrePedidoKeyTyped
+
+    private void txtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyTyped
+        if(txtTelefono.getText().length() >= 8){
+            evt.consume();
+        }else{
+            int key = evt.getKeyChar(); 
+            boolean numeros = key >= 48 && key <= 57;   
+            if (!numeros)evt.consume();
+        }
+        
+    }//GEN-LAST:event_txtTelefonoKeyTyped
+
+    private void txtTelefonoInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtTelefonoInputMethodTextChanged
+        
+    }//GEN-LAST:event_txtTelefonoInputMethodTextChanged
 
     
     public static void main(String args[]) {
@@ -630,14 +814,17 @@ public class RealizarVenta extends javax.swing.JFrame {
     private javax.swing.JButton btnAgregarCola;
     private javax.swing.JButton btnAgregarProductos;
     private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnEstadoVenta;
     private javax.swing.ButtonGroup btnTipoPago;
     private javax.swing.ButtonGroup btnTipoVenta;
     private javax.swing.JButton btnVerVentas;
     private javax.swing.JButton btnVolver;
+    private javax.swing.JComboBox<String> cmbEstadoVenta;
     private javax.swing.JComboBox<String> cmbProductos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -650,14 +837,18 @@ public class RealizarVenta extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JDialog jdAgregarProducto;
+    private javax.swing.JDialog jdVentasPendientes;
     private javax.swing.JRadioButton rbDebito;
     private javax.swing.JRadioButton rbEfectivo;
     private javax.swing.JRadioButton rbEncargo;
     private javax.swing.JRadioButton rbPresencial;
     private javax.swing.JTable tblProductos_venta;
+    private javax.swing.JTable tblVentasPendientes;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtFecha;
     private javax.swing.JTextField txtNombrePedido;
