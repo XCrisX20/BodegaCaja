@@ -77,7 +77,6 @@ public class Caja extends javax.swing.JFrame {
         btnCerrarSesion = new javax.swing.JButton();
         btnVerProductos = new javax.swing.JButton();
         btnNuevaVenta = new javax.swing.JButton();
-        btnActualizarEstado = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
@@ -190,19 +189,7 @@ public class Caja extends javax.swing.JFrame {
                 btnNuevaVentaActionPerformed(evt);
             }
         });
-        panelCaja.add(btnNuevaVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 440, 160, 37));
-
-        btnActualizarEstado.setBackground(new java.awt.Color(40, 105, 133));
-        btnActualizarEstado.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnActualizarEstado.setForeground(new java.awt.Color(255, 255, 255));
-        btnActualizarEstado.setText("Actualizar Estado");
-        btnActualizarEstado.setBorder(null);
-        btnActualizarEstado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnActualizarEstadoActionPerformed(evt);
-            }
-        });
-        panelCaja.add(btnActualizarEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 440, 160, 37));
+        panelCaja.add(btnNuevaVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 440, 160, 37));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -229,10 +216,6 @@ public class Caja extends javax.swing.JFrame {
         RealizarVenta rv = new RealizarVenta(rut_empleado);
         rv.setVisible(true);
     }//GEN-LAST:event_btnNuevaVentaActionPerformed
-
-    private void btnActualizarEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarEstadoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnActualizarEstadoActionPerformed
 
     private void btnVerProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerProductosActionPerformed
         this.dispose();
@@ -285,7 +268,6 @@ public class Caja extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnActualizarEstado;
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnNuevaVenta;
     private javax.swing.JButton btnVerProductos;
