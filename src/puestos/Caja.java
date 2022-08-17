@@ -1,10 +1,19 @@
 
 package puestos;
 
+import javax.swing.JOptionPane;
+import java.sql.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
+import javax.swing.table.DefaultTableModel;
+import principal.Conexion;
 import principal.Login;
 
 
 public class Caja extends javax.swing.JFrame {
+    Conexion conex = new Conexion();
+    Connection conn = conex.realizarConexion();
     private String rut_empleado;
     int xMouse;
     int yMouse;
@@ -12,12 +21,48 @@ public class Caja extends javax.swing.JFrame {
     public Caja(String rut_empleado) {
         this.rut_empleado = rut_empleado;
         initComponents();
+        llenarTabla();
     }
 
     public Caja() {
         initComponents();
+        llenarTabla();
     }
 
+    private void llenarTabla(){
+        String cons = "Select * From Ventas Order By fecha_hora desc";
+        DefaultTableModel mdl = (DefaultTableModel) tblVentas.getModel();
+        mdl.setRowCount(0);
+        String tv = "", tp = "", estado_venta = "";
+        String total = "";
+        try{
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery(cons);
+            while(rs.next()){
+                if(rs.getString("tipo_venta").equalsIgnoreCase("P")) tv = "Presencial";
+                if(rs.getString("tipo_venta").equalsIgnoreCase("E")) tv = "Encargo";
+                if(rs.getString("tipo_pago").equalsIgnoreCase("E")) tp = "Efectivo";
+                if(rs.getString("tipo_pago").equalsIgnoreCase("D")) tp = "Debito";
+                if(rs.getString("estado_venta").equalsIgnoreCase("A")) estado_venta = "Aprobado";
+                if(rs.getString("estado_venta").equalsIgnoreCase("C")) estado_venta = "Cancelado";
+                if(rs.getString("estado_venta").equalsIgnoreCase("P")) estado_venta = "Pendiente";
+                
+                //NumberFormat formato = NumberFormat.getCurrencyInstance(new Locale("cl","CL"));
+                DecimalFormat formato = new DecimalFormat("$ #,###");
+                total = formato.format(rs.getInt("total_pago"));
+                
+                mdl.addRow(new Object[]{
+                    rs.getInt("id_venta"), rs.getString("fecha_hora"), tv, tp, total, estado_venta
+                });
+            }
+            tblVentas.setModel(mdl);
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "No se pudo obtener las ventas", "Error al obtener ventas", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        
+    }
+    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -26,7 +71,7 @@ public class Caja extends javax.swing.JFrame {
         jProgressBar1 = new javax.swing.JProgressBar();
         panelCaja = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblVentas = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
         btnCerrarSesion = new javax.swing.JButton();
@@ -42,33 +87,32 @@ public class Caja extends javax.swing.JFrame {
         panelCaja.setBackground(new java.awt.Color(86, 101, 115));
         panelCaja.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTable1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblVentas.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tblVentas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID Venta", "Fecha - Hora", "Tipo de Venta", "Tipo de Pago", "Total", "Extra", "Rut Empleado"
+                "ID Venta", "Fecha - Hora", "Tipo de Venta", "Tipo de Pago", "Total", "Estado Venta"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-            jTable1.getColumnModel().getColumn(4).setResizable(false);
-            jTable1.getColumnModel().getColumn(5).setResizable(false);
-            jTable1.getColumnModel().getColumn(6).setResizable(false);
+        jScrollPane1.setViewportView(tblVentas);
+        if (tblVentas.getColumnModel().getColumnCount() > 0) {
+            tblVentas.getColumnModel().getColumn(0).setResizable(false);
+            tblVentas.getColumnModel().getColumn(0).setPreferredWidth(100);
+            tblVentas.getColumnModel().getColumn(1).setResizable(false);
+            tblVentas.getColumnModel().getColumn(2).setResizable(false);
+            tblVentas.getColumnModel().getColumn(3).setResizable(false);
+            tblVentas.getColumnModel().getColumn(4).setResizable(false);
+            tblVentas.getColumnModel().getColumn(5).setResizable(false);
         }
 
         panelCaja.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 840, 300));
@@ -181,6 +225,7 @@ public class Caja extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void btnNuevaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaVentaActionPerformed
+        this.dispose();
         RealizarVenta rv = new RealizarVenta(rut_empleado);
         rv.setVisible(true);
     }//GEN-LAST:event_btnNuevaVentaActionPerformed
@@ -247,8 +292,8 @@ public class Caja extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JPanel panelCaja;
+    private javax.swing.JTable tblVentas;
     // End of variables declaration//GEN-END:variables
 }

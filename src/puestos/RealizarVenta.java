@@ -3,6 +3,7 @@ package puestos;
 
 import modelos.Producto;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class RealizarVenta extends javax.swing.JFrame {
         mdl.setRowCount(0);
         String cons = "Select * from ventas where estado_venta = 'P'";
         String tv = "", tp = "", estado_venta = "";
+        String total;
         try{
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery(cons);
@@ -55,9 +57,13 @@ public class RealizarVenta extends javax.swing.JFrame {
                 if(rs.getString("estado_venta").equalsIgnoreCase("C")) estado_venta = "Cancelado";
                 if(rs.getString("estado_venta").equalsIgnoreCase("P")) estado_venta = "Pendiente";
                 
+                DecimalFormat formato = new DecimalFormat("$ #,###");
+                total = formato.format(rs.getInt("total_pago"));
+                
                 mdl.addRow(new Object[]{
-                    rs.getInt("id_venta"), rs.getString("fecha_hora"), tv, tp, rs.getString("telefono"), rs.getString("nombre_pedido"),
-                    rs.getInt("total_pago"),estado_venta
+                    rs.getInt("id_venta"), rs.getString("fecha_hora"), tv, tp, rs.getString("telefono") == null? "Sin Telefono":rs.getString("telefono")
+                        , rs.getString("nombre_pedido") == null? "Sin Nombre":rs.getString("nombre_pedido"),
+                    total,estado_venta
                 });
             }
             tblVentasPendientes.setModel(mdl);
@@ -71,9 +77,13 @@ public class RealizarVenta extends javax.swing.JFrame {
         txtTotal.setText("$ 0");
         DefaultTableModel mdl = (DefaultTableModel) tblProductos_venta.getModel();
         mdl.setRowCount(0);
+        String precio, total;
+        DecimalFormat formato = new DecimalFormat("$ #,###");
         for(Producto p: productos_lista){
+            precio = formato.format(p.getPrecio());
+            total = formato.format(p.getTotal());
             mdl.addRow(new Object[]{
-                p.getId_producto(), p.getNombre(), p.getCantidad(), p.getPrecio(), p.getTotal()
+                p.getId_producto(), p.getNombre(), p.getCantidad(), precio, total
             });
             suma += p.getTotal();
             txtTotal.setText("$ " + String.valueOf(suma));
@@ -213,6 +223,17 @@ public class RealizarVenta extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Cantidad");
         jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 62, 78, -1));
+
+        txtCantidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCantidadActionPerformed(evt);
+            }
+        });
+        txtCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCantidadKeyTyped(evt);
+            }
+        });
         jPanel4.add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(155, 59, 100, -1));
 
         btnAgregar.setBackground(new java.awt.Color(40, 105, 133));
@@ -264,8 +285,10 @@ public class RealizarVenta extends javax.swing.JFrame {
         );
 
         jdVentasPendientes.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        jdVentasPendientes.setTitle("Ventas Pendientes");
+        jdVentasPendientes.setPreferredSize(new java.awt.Dimension(700, 450));
         jdVentasPendientes.setResizable(false);
-        jdVentasPendientes.setSize(new java.awt.Dimension(650, 450));
+        jdVentasPendientes.setSize(new java.awt.Dimension(700, 450));
         jdVentasPendientes.setType(java.awt.Window.Type.POPUP);
 
         jPanel5.setBackground(new java.awt.Color(86, 101, 115));
@@ -303,31 +326,38 @@ public class RealizarVenta extends javax.swing.JFrame {
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
         jLabel12.setText("Ventas Pendientes");
 
-        cmbEstadoVenta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pendiente", "Aprobado", "Cancelado" }));
+        cmbEstadoVenta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Aprobado", "Cancelado" }));
 
         btnEstadoVenta.setBackground(new java.awt.Color(40, 105, 133));
         btnEstadoVenta.setForeground(new java.awt.Color(255, 255, 255));
         btnEstadoVenta.setText("Cambiar Estado Venta");
         btnEstadoVenta.setBorder(null);
+        btnEstadoVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEstadoVentaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cmbEstadoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnEstadoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(cmbEstadoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnEstadoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel12)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -336,22 +366,24 @@ public class RealizarVenta extends javax.swing.JFrame {
                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmbEstadoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEstadoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jdVentasPendientesLayout = new javax.swing.GroupLayout(jdVentasPendientes.getContentPane());
         jdVentasPendientes.getContentPane().setLayout(jdVentasPendientesLayout);
         jdVentasPendientesLayout.setHorizontalGroup(
             jdVentasPendientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jdVentasPendientesLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jdVentasPendientesLayout.setVerticalGroup(
             jdVentasPendientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -621,6 +653,8 @@ public class RealizarVenta extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel2MouseDragged
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        Caja caj = new Caja();
+        caj.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
@@ -682,6 +716,10 @@ public class RealizarVenta extends javax.swing.JFrame {
     private void btnAgregarColaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarColaActionPerformed
         if(productos_lista.isEmpty()){
             JOptionPane.showMessageDialog(null, "No se han Asociado Productos a la venta","Venta sin productos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if(txtNombrePedido.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Debe ingresar un nombre","Ingreso de nombre incorrecto", JOptionPane.WARNING_MESSAGE);
             return;
         }
         String tv = "";
@@ -749,6 +787,7 @@ public class RealizarVenta extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarColaActionPerformed
 
     private void btnVerVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerVentasActionPerformed
+        llenarTablaPendientes();
         jdVentasPendientes.setVisible(true);
     }//GEN-LAST:event_btnVerVentasActionPerformed
 
@@ -779,6 +818,39 @@ public class RealizarVenta extends javax.swing.JFrame {
     private void txtTelefonoInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtTelefonoInputMethodTextChanged
         
     }//GEN-LAST:event_txtTelefonoInputMethodTextChanged
+
+    private void btnEstadoVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEstadoVentaActionPerformed
+        if(tblVentasPendientes.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una sola fila", "Error de Seleccion",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        DefaultTableModel mdl = (DefaultTableModel) tblVentasPendientes.getModel();
+        int id= Integer.parseInt(String.valueOf(mdl.getValueAt(tblVentasPendientes.getSelectedRow(),0)));
+        
+        String estado = (String) cmbEstadoVenta.getSelectedItem();
+        estado = String.valueOf(estado.charAt(0));
+        
+        String cons = "Update ventas set estado_venta = '"+estado+"' where id_venta = "+id;
+        try{
+            Statement stm = conn.createStatement();
+            stm.executeUpdate(cons);
+            JOptionPane.showMessageDialog(null, "Se ha modificado Correctamente!", "Modificacion Exitosa", JOptionPane.INFORMATION_MESSAGE);
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "No se pudo Actualizar el estado", "Error de Modificacion", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        llenarTablaPendientes();
+    }//GEN-LAST:event_btnEstadoVentaActionPerformed
+
+    private void txtCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCantidadActionPerformed
+
+    private void txtCantidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadKeyTyped
+        int key = evt.getKeyChar(); 
+        boolean numeros = key >= 48 && key <= 57;   
+        if (!numeros)evt.consume();
+    }//GEN-LAST:event_txtCantidadKeyTyped
 
     
     public static void main(String args[]) {
