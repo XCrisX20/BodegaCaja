@@ -1,6 +1,8 @@
 
 package puestos;
 
+import java.awt.Event;
+import java.awt.event.KeyEvent;
 import modelos.Producto;
 import java.sql.*;
 import java.text.DecimalFormat;
@@ -28,6 +30,9 @@ public class RealizarVenta extends javax.swing.JFrame {
     public RealizarVenta(String rut_empleado) {
         this.rut_empleado = rut_empleado;
         initComponents();
+        evitarPegar(txtNombrePedido);
+        evitarPegar(txtTelefono);
+        evitarPegar(txtCantidad);
         llenarTablaPendientes();
         llenarTabla();
         txtCantidad.setText("1");
@@ -38,6 +43,13 @@ public class RealizarVenta extends javax.swing.JFrame {
     
     public RealizarVenta() {}
 
+    
+    public static void evitarPegar(JTextField campo) {
+        InputMap map2 = campo.getInputMap(JTextField.WHEN_FOCUSED);
+        map2.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, Event.CTRL_MASK), "null");
+    }
+    
+    
     
     private void llenarTablaPendientes(){
         DefaultTableModel mdl = (DefaultTableModel) tblVentasPendientes.getModel();
@@ -286,7 +298,6 @@ public class RealizarVenta extends javax.swing.JFrame {
 
         jdVentasPendientes.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         jdVentasPendientes.setTitle("Ventas Pendientes");
-        jdVentasPendientes.setPreferredSize(new java.awt.Dimension(700, 450));
         jdVentasPendientes.setResizable(false);
         jdVentasPendientes.setSize(new java.awt.Dimension(700, 450));
         jdVentasPendientes.setType(java.awt.Window.Type.POPUP);
