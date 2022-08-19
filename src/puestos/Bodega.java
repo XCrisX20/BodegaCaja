@@ -14,10 +14,11 @@ public class Bodega extends javax.swing.JFrame {
     Connection conn = conex.realizarConexion();
     int xMouse;
     int yMouse;
+    int xxMouse;
+    int yyMouse;
     
     public Bodega() {
                 initComponents();
-        this.setExtendedState(MAXIMIZED_BOTH);
         llenarTabla();
         tablaInsumos.setAutoCreateRowSorter(false);
         llenarCombo();
@@ -70,15 +71,18 @@ public class Bodega extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        NombreInsumo = new javax.swing.JLabel();
+        Codigo = new javax.swing.JLabel();
+        txtStockCambio = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txDescripcion = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        tfNombre = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        TXStockActual = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
         panelBodega = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaInsumos = new javax.swing.JTable();
@@ -114,13 +118,24 @@ public class Bodega extends javax.swing.JFrame {
         jdAjuste.setLocationByPlatform(true);
         jdAjuste.setModal(true);
         jdAjuste.setUndecorated(true);
-        jdAjuste.setSize(new java.awt.Dimension(550, 380));
+        jdAjuste.setPreferredSize(new java.awt.Dimension(550, 390));
+        jdAjuste.setSize(new java.awt.Dimension(550, 390));
         jdAjuste.setType(java.awt.Window.Type.POPUP);
 
         jPanel2.setBackground(new java.awt.Color(86, 101, 115));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jPanel3.setBackground(new java.awt.Color(40, 105, 133));
+        jPanel3.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel3MouseDragged(evt);
+            }
+        });
+        jPanel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel3MousePressed(evt);
+            }
+        });
 
         jButton1.setBackground(new java.awt.Color(40, 105, 133));
         jButton1.setText("X");
@@ -134,15 +149,36 @@ public class Bodega extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(240, 240, 240));
         jLabel2.setText("Ajuste");
 
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(240, 240, 240));
+        jLabel5.setText("Insumo:");
+
+        NombreInsumo.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        NombreInsumo.setForeground(new java.awt.Color(240, 240, 240));
+        NombreInsumo.setText("Name");
+
+        Codigo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        Codigo.setForeground(new java.awt.Color(240, 240, 240));
+        Codigo.setText("a");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addGap(133, 133, 133)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(Codigo)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(NombreInsumo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -150,25 +186,30 @@ public class Bodega extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(jLabel5)
+                        .addComponent(NombreInsumo))
                     .addComponent(jButton1))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Codigo)
+                .addContainerGap())
         );
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtStockCambio.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txtStockCambio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtStockCambioActionPerformed(evt);
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        txDescripcion.setColumns(20);
+        txDescripcion.setRows(5);
+        jScrollPane2.setViewportView(txDescripcion);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel3.setText("Stock");
+        jLabel3.setText("Stock a cambiar");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(240, 240, 240));
@@ -182,18 +223,17 @@ public class Bodega extends javax.swing.JFrame {
         });
 
         jButton3.setText("Aceptar");
-
-        tfNombre.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        tfNombre.setEnabled(false);
-        tfNombre.addActionListener(new java.awt.event.ActionListener() {
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfNombreActionPerformed(evt);
+                jButton3ActionPerformed(evt);
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel5.setText("Insumo");
+        TXStockActual.setEnabled(false);
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(240, 240, 240));
+        jLabel6.setText("Stock actual");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -201,49 +241,47 @@ public class Bodega extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGap(241, 241, 241)
+                        .addComponent(jLabel4))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(86, 86, 86)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(169, 169, 169)
-                                .addComponent(jLabel4)
-                                .addGap(156, 156, 156))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                .addGap(22, 22, 22)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 497, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(jLabel3)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel5)
-                                        .addComponent(tfNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
-                .addContainerGap(29, Short.MAX_VALUE))
+                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel6)
+                                .addGap(37, 37, 37))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(txtStockCambio, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(TXStockActual, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(16, 16, 16)))))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel5)
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(tfNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                    .addComponent(TXStockActual, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtStockCambio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
                 .addComponent(jLabel4)
-                .addGap(13, 13, 13)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(29, 29, 29)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -254,11 +292,11 @@ public class Bodega extends javax.swing.JFrame {
         jdAjuste.getContentPane().setLayout(jdAjusteLayout);
         jdAjusteLayout.setHorizontalGroup(
             jdAjusteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jdAjusteLayout.setVerticalGroup(
             jdAjusteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -290,6 +328,14 @@ public class Bodega extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tablaInsumos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaInsumosMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tablaInsumosMousePressed(evt);
             }
         });
         jScrollPane1.setViewportView(tablaInsumos);
@@ -782,9 +828,9 @@ public class Bodega extends javax.swing.JFrame {
         yMouse = evt.getY();        // TODO add your handling code here:
     }//GEN-LAST:event_jPanel1MousePressed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtStockCambioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtStockCambioActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtStockCambioActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     jdAjuste.setVisible(false);         // TODO add your handling code here:
@@ -794,9 +840,52 @@ public class Bodega extends javax.swing.JFrame {
     jdAjuste.setVisible(false);      // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void tfNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNombreActionPerformed
+    private void jPanel3MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseDragged
         // TODO add your handling code here:
-    }//GEN-LAST:event_tfNombreActionPerformed
+        int x = evt.getXOnScreen();
+        int y = evt.getYOnScreen();
+        
+        jdAjuste.setLocation(x - xxMouse, y - yyMouse);
+    }//GEN-LAST:event_jPanel3MouseDragged
+
+    private void jPanel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MousePressed
+        xxMouse = evt.getX();
+        yyMouse = evt.getY(); 
+    }//GEN-LAST:event_jPanel3MousePressed
+
+    private void tablaInsumosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInsumosMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tablaInsumosMousePressed
+
+    private void tablaInsumosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInsumosMouseClicked
+        // TODO add your handling code here:
+        int row = tablaInsumos.getSelectedRow();
+        txtStockCambio.setText("");
+        txDescripcion.setText("");
+        DefaultTableModel model = (DefaultTableModel)tablaInsumos.getModel();
+        NombreInsumo.setText(model.getValueAt(row, 1).toString());
+        TXStockActual.setText(model.getValueAt(row, 3).toString());
+        Codigo.setText(model.getValueAt(row, 0).toString());
+        
+    }//GEN-LAST:event_tablaInsumosMouseClicked
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        int stockCambio = Integer.parseInt(txtStockCambio.getText());
+        int stockActual = Integer.parseInt(TXStockActual.getText());
+       if( stockCambio < stockActual && txDescripcion.getText().equals("")){
+           JOptionPane.showMessageDialog(null, "el campo de Descripcion no puede estar Vacios cuando resta Stock", "Error de Actualizar Stock", JOptionPane.WARNING_MESSAGE);
+       };
+        String cons = "UPDATE INSUMO SET STOCK_ACTUAL = "+txtStockCambio.getText()+" WHERE ID_INSUMO = "+Codigo.getText()+"" ;
+            try{
+              Statement stm = conn.createStatement();
+              stm.executeUpdate(cons);
+              JOptionPane.showMessageDialog(null, "Insumo actualizado !", "Insumo actualizado", JOptionPane.INFORMATION_MESSAGE);
+              }catch(SQLException ex){
+               JOptionPane.showMessageDialog(null, "Error al actualizado", "Error de actualizado", JOptionPane.ERROR_MESSAGE);
+                }
+        jdAjuste.setVisible(false); 
+        llenarTabla();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     
     public static void main(String args[]) {
@@ -809,6 +898,9 @@ public class Bodega extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Codigo;
+    private javax.swing.JLabel NombreInsumo;
+    private javax.swing.JTextField TXStockActual;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnAgregarInsumo;
     private javax.swing.JButton btnAjustes;
@@ -827,13 +919,12 @@ public class Bodega extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JDialog jdAjuste;
     private javax.swing.JLabel lblId1;
     private javax.swing.JLabel lblId2;
@@ -846,11 +937,12 @@ public class Bodega extends javax.swing.JFrame {
     private java.awt.Panel panelBotones;
     private java.awt.Panel panelDatos;
     private javax.swing.JTable tablaInsumos;
-    private javax.swing.JTextField tfNombre;
+    private javax.swing.JTextArea txDescripcion;
     private javax.swing.JTextField txtBuscarNombre;
     private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtStockActual;
+    private javax.swing.JTextField txtStockCambio;
     private javax.swing.JTextField txtStockCritico;
     // End of variables declaration//GEN-END:variables
 }
