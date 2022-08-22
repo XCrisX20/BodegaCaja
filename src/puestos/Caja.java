@@ -1,11 +1,14 @@
 
 package puestos;
 
+import java.io.File;
 import javax.swing.JOptionPane;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import principal.Conexion;
 import principal.Login;
@@ -17,6 +20,14 @@ public class Caja extends javax.swing.JFrame {
     private String rut_empleado;
     int xMouse;
     int yMouse;
+    
+    //Para Archivos
+    private JFileChooser fc = new JFileChooser();
+    private File archivoElegido;
+    private String valor = null;
+    private FileNameExtensionFilter filter;
+    
+    
     
     public Caja(String rut_empleado) {
         this.rut_empleado = rut_empleado;
@@ -77,6 +88,7 @@ public class Caja extends javax.swing.JFrame {
         btnCerrarSesion = new javax.swing.JButton();
         btnVerProductos = new javax.swing.JButton();
         btnNuevaVenta = new javax.swing.JButton();
+        btnCerrarCaja = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
@@ -191,6 +203,18 @@ public class Caja extends javax.swing.JFrame {
         });
         panelCaja.add(btnNuevaVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 440, 160, 37));
 
+        btnCerrarCaja.setBackground(new java.awt.Color(40, 105, 133));
+        btnCerrarCaja.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnCerrarCaja.setForeground(new java.awt.Color(255, 255, 255));
+        btnCerrarCaja.setText("Cerrar Caja");
+        btnCerrarCaja.setBorder(null);
+        btnCerrarCaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarCajaActionPerformed(evt);
+            }
+        });
+        panelCaja.add(btnCerrarCaja, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 440, 160, 37));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -234,6 +258,17 @@ public class Caja extends javax.swing.JFrame {
         this.setLocation(x - xMouse, y - yMouse);
     }//GEN-LAST:event_jPanel1MouseDragged
 
+    private void btnCerrarCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarCajaActionPerformed
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int respuesta = fc.showOpenDialog(null);
+        if (respuesta == JFileChooser.APPROVE_OPTION) {
+            archivoElegido = fc.getSelectedFile();
+            valor = archivoElegido.getPath() + "/";
+
+        }
+        System.out.println(valor);
+    }//GEN-LAST:event_btnCerrarCajaActionPerformed
+
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -268,6 +303,7 @@ public class Caja extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCerrarCaja;
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnNuevaVenta;
     private javax.swing.JButton btnVerProductos;

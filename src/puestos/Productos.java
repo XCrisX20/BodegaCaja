@@ -1,11 +1,18 @@
 
 package puestos;
 
+import java.awt.Event;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.sql.*;
 import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import javax.swing.InputMap;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import principal.Conexion;
 
@@ -22,10 +29,20 @@ public class Productos extends javax.swing.JFrame {
     public Productos() {
         insumos = new ArrayList<>();
         initComponents();
+        evitarPegar(txtPrecioProducto);
+        evitarPegar(txtCantidad);
+        txtCantidad.setText("1");
         cargarTabla();
         llenarTablaInsumos();
         cargarDatosInfoProductos();
         llenarComboBox();
+        cargarUnidadMedida();
+        cmbProductos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cargarUnidadMedida();
+            }
+        });
     }
 
     
@@ -55,6 +72,8 @@ public class Productos extends javax.swing.JFrame {
         lblUnidadMedida = new javax.swing.JLabel();
         jdAgregarProducto = new javax.swing.JDialog();
         jPanel3 = new javax.swing.JPanel();
+        btnAgregarProducto_ = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -62,7 +81,7 @@ public class Productos extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         txtDescripcionProducto = new javax.swing.JTextArea();
         txtPrecioProducto = new javax.swing.JTextField();
-        btnAgregarProducto_ = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
         pnlProductos = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblProductos = new javax.swing.JTable();
@@ -195,9 +214,23 @@ public class Productos extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Escoja un Insumo");
 
+        cmbProductos.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                cmbProductosInputMethodTextChanged(evt);
+            }
+        });
+
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Escoja la Cantidad a Usar");
+
+        txtCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCantidadKeyTyped(evt);
+            }
+        });
 
         btnCancelar.setBackground(new java.awt.Color(40, 105, 133));
         btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
@@ -259,7 +292,7 @@ public class Productos extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -285,6 +318,15 @@ public class Productos extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(86, 101, 115));
 
+        btnAgregarProducto_.setText("Agregar");
+        btnAgregarProducto_.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarProducto_ActionPerformed(evt);
+            }
+        });
+
+        jPanel5.setBackground(new java.awt.Color(40, 105, 133));
+
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Nombre");
@@ -297,62 +339,107 @@ public class Productos extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Precio");
 
-        txtDescripcionProducto.setColumns(20);
-        txtDescripcionProducto.setRows(5);
-        jScrollPane2.setViewportView(txtDescripcionProducto);
-
-        btnAgregarProducto_.setText("Agregar");
-        btnAgregarProducto_.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarProducto_ActionPerformed(evt);
+        txtNombreProducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreProductoKeyTyped(evt);
             }
         });
+
+        txtDescripcionProducto.setColumns(20);
+        txtDescripcionProducto.setLineWrap(true);
+        txtDescripcionProducto.setRows(5);
+        txtDescripcionProducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDescripcionProductoKeyTyped(evt);
+            }
+        });
+        jScrollPane2.setViewportView(txtDescripcionProducto);
+
+        txtPrecioProducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPrecioProductoKeyTyped(evt);
+            }
+        });
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 2, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Ingresar un Producto Nuevo");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(jPanel5Layout.createSequentialGroup()
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txtPrecioProducto))
+                                .addGroup(jPanel5Layout.createSequentialGroup()
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(43, 43, 43)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(39, 39, 39)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPrecioProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31))
+        );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(82, 82, 82)
+                .addGap(36, 36, 36)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnAgregarProducto_, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(32, 32, 32)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtNombreProducto)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                            .addComponent(txtPrecioProducto))))
-                .addContainerGap(97, Short.MAX_VALUE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(48, 48, 48)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPrecioProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(50, 50, 50)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btnAgregarProducto_, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jdAgregarProductoLayout = new javax.swing.GroupLayout(jdAgregarProducto.getContentPane());
         jdAgregarProducto.getContentPane().setLayout(jdAgregarProductoLayout);
         jdAgregarProductoLayout.setHorizontalGroup(
             jdAgregarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jdAgregarProductoLayout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jdAgregarProductoLayout.setVerticalGroup(
             jdAgregarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -415,6 +502,11 @@ public class Productos extends javax.swing.JFrame {
         btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/iconos/trash.png"))); // NOI18N
         btnEliminar.setText("Eliminar");
         btnEliminar.setBorder(null);
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
         pnlProductos.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(375, 440, 153, 40));
         pnlProductos.add(txtBuscarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 390, 30));
 
@@ -518,6 +610,23 @@ public class Productos extends javax.swing.JFrame {
         }catch(SQLException ex){
             JOptionPane.showMessageDialog(null, "No se pudieron Cargar los insumos", "Error al cargar insumos", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    private void cargarUnidadMedida(){
+        String nombreInsumo = (String) cmbProductos.getSelectedItem();
+    
+        String cons = "Select * from insumo where nombre = '"+nombreInsumo+"'";
+        try{
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery(cons);
+            if(rs.next()){
+                lblUnidadMedida.setText(rs.getString("unidad_medida"));
+            }
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "Error al Obtener el Insumo", "Error de Obtencion",JOptionPane.ERROR_MESSAGE);
+        }
+    
+    
     }
     
     
@@ -675,46 +784,42 @@ public class Productos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
-        /*int idInsumo = 0;
-        if (lstInsumos.getSelectedIndex() == -1){
-            JOptionPane.showMessageDialog(null, "Debe Seleccionar una sola fila", "Seleccion Incorrecta", JOptionPane.WARNING_MESSAGE);
-        }else{
-            String nombreInsumo = lstInsumos.getSelectedValue();
-            String cons = "Select * from insumo where nombre = '"+nombreInsumo+"'";
-            try{
-                Statement stm = conn.createStatement();
-                ResultSet rs = stm.executeQuery(cons);
-                if(rs.next()){
-                    idInsumo = rs.getInt("id_insumo");
-                }
+        int idInsumo = 0;
+        if(tblInsumos.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(null, "Debe Seleccionar una fila", "Seleccion Incorrecta", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        DefaultTableModel mdl = (DefaultTableModel) tblInsumos.getModel();
+        String nombreInsumo = String.valueOf(mdl.getValueAt(tblInsumos.getSelectedRow(), 0));
+        String cons = "Select * from insumo where nombre = '"+nombreInsumo+"'";
+        
+        try{
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery(cons);
+            if(rs.next()){
+                idInsumo = rs.getInt("id_insumo");
+            }
 
-                if(idInsumo != 0){
-                    int opcion = JOptionPane.showConfirmDialog(null, "¿Estas Seguro de Eliminar El Insumo "+nombreInsumo+"?", "Eliminacion", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                    switch(opcion){
-                        case 0:
+            if(idInsumo != 0){
+                int opcion = JOptionPane.showConfirmDialog(null, "¿Estas Seguro de Eliminar El Insumo "+nombreInsumo+"?", "Eliminacion", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                switch(opcion){
+                    case 0:
                         String cons1 = "delete from insumos_productos where id_producto = "+idProducto+" and id_insumo = "+idInsumo;
                         Statement stm1 = conn.createStatement();
                         stm1.executeUpdate(cons1);
-                        JOptionPane.showMessageDialog(null, "Se ha Borrado el Insumo "+nombreInsumo,"Insumo Borrado!", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Se ha Borrado el Insumo "+nombreInsumo+" del producto","Insumo Borrado!", JOptionPane.INFORMATION_MESSAGE);
+                        llenarTablaInsumos();
                         break;
-                        case 2:
+                    case 2:
                         JOptionPane.showMessageDialog(null, "Has Cancelado el borrado", "Borrado Cancelado", JOptionPane.INFORMATION_MESSAGE);
                         break;
-                    }
-
-                    String cons1 = "delete from insumos_productos where id_producto = "+idProducto+" and id_insumo = "+idInsumo;
-                    Statement stm1 = conex.createStatement();
-                    stm1.executeUpdate(cons1);
-                    JOptionPane.showMessageDialog(null, "Se ha Borrado el Insumo "+nombreInsumo,"Insumo Borrado!", JOptionPane.INFORMATION_MESSAGE);
-                    
                 }
 
-            }catch(SQLException ex){
-                JOptionPane.showMessageDialog(null,"No se pudieron obtener datos del insumo","Error al obtener datos",JOptionPane.ERROR);
             }
 
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null,"No se pudieron obtener datos del insumo","Error al obtener datos",JOptionPane.ERROR);
         }
-        */
     }//GEN-LAST:event_btnDescartarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -724,7 +829,7 @@ public class Productos extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         String insumo = cmbProductos.getSelectedItem().toString().trim();
         int cantidad = Integer.parseInt(txtCantidad.getText().trim());
-
+        
         String consInsumo = "Select * from insumo where nombre = '"+insumo+"'";
         int idInsumo = 0;
         try{
@@ -737,8 +842,25 @@ public class Productos extends javax.swing.JFrame {
         }catch(SQLException ex){
             JOptionPane.showMessageDialog(null, "No se pudo obtener el insumo seleccionado","Error Seleccion", JOptionPane.ERROR);
         }
-
+        boolean existe = false;
         if(idInsumo != 0){
+            
+            String consProv = "Select count(*) as cantidad from insumos_productos where id_producto = "+idProducto+" and id_insumo = "+idInsumo;
+            
+            try{
+                Statement stmProv = conn.createStatement();
+                ResultSet rsProv = stmProv.executeQuery(consProv);
+                if(rsProv.next()){
+                    if(rsProv.getInt("cantidad") != 0){
+                        JOptionPane.showMessageDialog(null, "Ya Existe este Insumo en el producto Actual", "Insercion Fallida", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                }
+                
+            }catch(SQLException ex){
+                JOptionPane.showMessageDialog(null, "Error al obtener la cantidad de Insumos "+ex, "Error de Obtencion", JOptionPane.ERROR_MESSAGE);
+            }
+            
             try{
                 String cons = "Insert into insumos_productos values("+idInsumo+","+idProducto+","+cantidad+")";
                 Statement stm1 = conn.createStatement();
@@ -753,6 +875,14 @@ public class Productos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnAgregarProducto_ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProducto_ActionPerformed
+        if(txtDescripcionProducto.getText().length() > 300){
+            JOptionPane.showMessageDialog(null, "La descripcion contiene mas de 300 caracteres, por favor reduzca el contenido.", "Reducir el Contenido", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if(txtNombreProducto.getText().length() > 35){
+            JOptionPane.showMessageDialog(null, "El nombre contiene mas de 35 caracteres, por favor reduzca el contenido.", "Reducir el Contenido", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         String nombre = txtNombreProducto.getText().trim();
         String descripcion = txtDescripcionProducto.getText().trim();
         int precio = Integer.parseInt(txtPrecioProducto.getText().trim());
@@ -768,6 +898,152 @@ public class Productos extends javax.swing.JFrame {
         cargarTabla();
     }//GEN-LAST:event_btnAgregarProducto_ActionPerformed
 
+    private void txtPrecioProductoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecioProductoKeyTyped
+        if(txtPrecioProducto.getText().length() > 4){
+            evt.consume();
+            return;
+        }
+        int key = evt.getKeyChar(); 
+        boolean numeros = key >= 48 && key <= 57;   
+        if (!numeros)evt.consume();
+        
+        if(key == 9 || key == 10){
+            evt.consume();
+            String textoOriginal = txtPrecioProducto.getText().trim();
+            txtPrecioProducto.setText(textoOriginal);
+            btnAgregarProducto_.requestFocus();
+        }
+        
+    }//GEN-LAST:event_txtPrecioProductoKeyTyped
+
+    private void txtDescripcionProductoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescripcionProductoKeyTyped
+        if(txtDescripcionProducto.getText().length() > 299){
+            int key = evt.getKeyChar();
+            evt.consume();
+            if(key == 9 || key == 10){
+                evt.consume();
+                String textoOriginal = txtDescripcionProducto.getText().trim();
+                txtDescripcionProducto.setText(textoOriginal);
+                txtPrecioProducto.requestFocus();
+                txtPrecioProducto.selectAll();
+            }
+            return;
+        }
+        int key = evt.getKeyChar();
+        if(key == 9 || key == 10){
+            evt.consume();
+            String textoOriginal = txtDescripcionProducto.getText().trim();
+            txtDescripcionProducto.setText(textoOriginal);
+            txtPrecioProducto.requestFocus();
+            txtPrecioProducto.selectAll();
+        }
+    }//GEN-LAST:event_txtDescripcionProductoKeyTyped
+
+    private void txtNombreProductoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreProductoKeyTyped
+        if(txtNombreProducto.getText().length() > 34){
+            evt.consume();
+            int key = evt.getKeyChar();
+            if(key == 9 || key == 10){
+                evt.consume();
+                String textoOriginal = txtNombreProducto.getText().trim();
+                txtNombreProducto.setText(textoOriginal);
+                txtDescripcionProducto.requestFocus();
+                txtDescripcionProducto.selectAll();
+            }
+            return;
+        }
+        int key = evt.getKeyChar();
+        boolean mayusculas = key >= 65 && key <= 90;
+        boolean minusculas = key >= 97 && key <= 122;
+        boolean espacio = key == 32;
+
+         if (!(minusculas || mayusculas || espacio))
+        {
+            evt.consume();
+        }
+        
+        if(key == 9 || key == 10){
+            evt.consume();
+            String textoOriginal = txtNombreProducto.getText().trim();
+            txtNombreProducto.setText(textoOriginal);
+            txtDescripcionProducto.requestFocus();
+            txtDescripcionProducto.selectAll();
+        }
+         
+    }//GEN-LAST:event_txtNombreProductoKeyTyped
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        if(tblProductos.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una Fila", "Seleccion Incorrecta", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        DefaultTableModel mdl = (DefaultTableModel) tblProductos.getModel();
+        idProducto = Integer.parseInt(String.valueOf(mdl.getValueAt(tblProductos.getSelectedRow(), 0)));
+        int opcion = JOptionPane.showConfirmDialog(null, "¿Estas Seguro de Eliminar El Producto con id: "+idProducto+"?", "Eliminacion", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            switch(opcion){
+                case 0:
+                    String cons = "select count(*) as cantidad from insumos_productos where id_producto = "+idProducto;
+                    try{
+                        Statement stm = conn.createStatement();
+                        ResultSet rs = stm.executeQuery(cons);
+                        if(rs.next()){
+                            if(rs.getInt("cantidad") != 0){
+                                JOptionPane.showMessageDialog(null, "No se puede Eliminar ya que aun hay insumos asociados a este producto", "No se pudo Eliminar", JOptionPane.WARNING_MESSAGE);
+                                break;
+                            }
+                        }
+                    }catch(SQLException ex){
+                        JOptionPane.showMessageDialog(null, "Error al Obtener los Insumos del Producto", "Error de obtencion", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+                    
+                    String cons2 = "select count(*) as cantidad from productos_venta where id_producto = "+idProducto;
+                    try{
+                        Statement stm2 = conn.createStatement();
+                        ResultSet rs2 = stm2.executeQuery(cons2);
+                        if(rs2.next()){
+                            if(rs2.getInt("cantidad") != 0){
+                                JOptionPane.showMessageDialog(null, "No se puede Eliminar ya que hay ventas asociadas a este producto", "No se pudo Eliminar", JOptionPane.WARNING_MESSAGE);
+                                break;
+                            }
+                        }
+                    }catch(SQLException ex){
+                        JOptionPane.showMessageDialog(null, "Error al Obtener ventas del Producto", "Error de obtencion", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+                    
+                    String cons3 = "Delete from producto where id_producto = "+idProducto;
+                    try{
+                        Statement stm3 = conn.createStatement();
+                        stm3.executeUpdate(cons3);
+                        JOptionPane.showMessageDialog(null, "Producto Eliminado Correctamente!", "Borrado Exitoso",JOptionPane.INFORMATION_MESSAGE);
+                        cargarTabla();
+                    }catch(SQLException ex){
+                        JOptionPane.showMessageDialog(null, "Error al intentar Eliminar el Producto, Intente mas Tarde", "Error de Borrado", JOptionPane.ERROR_MESSAGE);
+                    }
+                    
+                    break;
+                case 2:
+                    JOptionPane.showMessageDialog(null, "Eliminacion Cancelada", "Eliminacion Cancelada",JOptionPane.INFORMATION_MESSAGE);
+                    break;
+            }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void txtCantidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadKeyTyped
+        int key = evt.getKeyChar(); 
+        boolean numeros = key >= 48 && key <= 57;   
+        if (!numeros)evt.consume();
+    }//GEN-LAST:event_txtCantidadKeyTyped
+
+    private void cmbProductosInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_cmbProductosInputMethodTextChanged
+        
+    }//GEN-LAST:event_cmbProductosInputMethodTextChanged
+
+    public static void evitarPegar(JTextField campo) {
+        InputMap map2 = campo.getInputMap(JTextField.WHEN_FOCUSED);
+        map2.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, Event.CTRL_MASK), "null");
+    }
+    
     private void borrarCampos(){
         txtNombreProducto.setText("");
         txtDescripcionProducto.setText("");
@@ -838,10 +1114,12 @@ public class Productos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

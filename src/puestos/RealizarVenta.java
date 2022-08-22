@@ -745,7 +745,7 @@ public class RealizarVenta extends javax.swing.JFrame {
         int totalPagar = Integer.parseInt(valor_pagar);
 
         String cons = "Insert into ventas (fecha_hora, tipo_venta, total_pago, tipo_pago, rut_empleado, telefono, nombre_pedido, estado_venta)"
-                + "values(CAST(sysdate AS TIMESTAMP),'"+tv+"',"+totalPagar+",'"+tp+"','"+rut_empleado+"','"+txtTelefono.getText()+"','"+txtNombrePedido.getText()+"','"+estadoVenta+"')";
+                + "values(CAST(sysdate AS TIMESTAMP),'"+tv+"',"+totalPagar+",'"+tp+"','"+rut_empleado+"','+569"+txtTelefono.getText()+"','"+txtNombrePedido.getText()+"','"+estadoVenta+"')";
         
         //ingresar la venta
         try{
