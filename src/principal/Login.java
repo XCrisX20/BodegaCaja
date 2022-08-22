@@ -198,7 +198,7 @@ public class Login extends javax.swing.JFrame {
                             break;
                         case "B":
                             this.setVisible(false);
-                            Bodega bod = new Bodega();
+                            Bodega bod = new Bodega(rut_empleado);
                             bod.setVisible(true);
                             break;
                         case "C":

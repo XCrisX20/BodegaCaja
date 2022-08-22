@@ -9,22 +9,31 @@ import principal.Conexion;
 import principal.Login;
 
 public class Bodega extends javax.swing.JFrame {
-
+    String rut;
     Conexion conex = new Conexion();
     Connection conn = conex.realizarConexion();
     int xMouse;
     int yMouse;
     int xxMouse;
     int yyMouse;
+    private String rut_empleado;
+
     
     public Bodega() {
-                initComponents();
+        initComponents();
         llenarTabla();
         tablaInsumos.setAutoCreateRowSorter(false);
         llenarCombo();
         this.setLocationRelativeTo(this);
     }
-
+    public Bodega(String rut_empleado) {
+        this.rut_empleado = rut_empleado;
+        initComponents();
+         llenarTabla();
+        tablaInsumos.setAutoCreateRowSorter(false);
+        llenarCombo();
+        this.setLocationRelativeTo(this);
+    }
     
     void llenarCombo(){
         cmbTipoInsumo.removeAllItems();
@@ -83,6 +92,9 @@ public class Bodega extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         TXStockActual = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
+        JRrestar = new javax.swing.JRadioButton();
+        JRsumar = new javax.swing.JRadioButton();
+        buttonGroup1 = new javax.swing.ButtonGroup();
         panelBodega = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaInsumos = new javax.swing.JTable();
@@ -118,8 +130,8 @@ public class Bodega extends javax.swing.JFrame {
         jdAjuste.setLocationByPlatform(true);
         jdAjuste.setModal(true);
         jdAjuste.setUndecorated(true);
-        jdAjuste.setPreferredSize(new java.awt.Dimension(550, 390));
-        jdAjuste.setSize(new java.awt.Dimension(550, 390));
+        jdAjuste.setPreferredSize(new java.awt.Dimension(556, 535));
+        jdAjuste.setSize(new java.awt.Dimension(556, 535));
         jdAjuste.setType(java.awt.Window.Type.POPUP);
 
         jPanel2.setBackground(new java.awt.Color(86, 101, 115));
@@ -202,6 +214,11 @@ public class Bodega extends javax.swing.JFrame {
                 txtStockCambioActionPerformed(evt);
             }
         });
+        txtStockCambio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtStockCambioKeyTyped(evt);
+            }
+        });
 
         txDescripcion.setColumns(20);
         txDescripcion.setRows(5);
@@ -209,7 +226,7 @@ public class Bodega extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel3.setText("Stock a cambiar");
+        jLabel3.setText("Stock a");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(240, 240, 240));
@@ -229,11 +246,35 @@ public class Bodega extends javax.swing.JFrame {
             }
         });
 
+        TXStockActual.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         TXStockActual.setEnabled(false);
+        TXStockActual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TXStockActualActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(240, 240, 240));
         jLabel6.setText("Stock actual");
+
+        JRrestar.setBackground(new java.awt.Color(86, 101, 115));
+        buttonGroup1.add(JRrestar);
+        JRrestar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        JRrestar.setForeground(new java.awt.Color(240, 240, 240));
+        JRrestar.setSelected(true);
+        JRrestar.setText("Restar");
+
+        JRsumar.setBackground(new java.awt.Color(86, 101, 115));
+        buttonGroup1.add(JRsumar);
+        JRsumar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        JRsumar.setForeground(new java.awt.Color(240, 240, 240));
+        JRsumar.setText("Sumar");
+        JRsumar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JRsumarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -241,58 +282,77 @@ public class Bodega extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(47, 47, 47)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(241, 241, 241)
-                        .addComponent(jLabel4))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(JRsumar)
+                            .addComponent(JRrestar)))
+                    .addComponent(txtStockCambio, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addComponent(TXStockActual, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(78, 78, 78))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(86, 86, 86)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel6)
-                                .addGap(37, 37, 37))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(txtStockCambio, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(TXStockActual, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(16, 16, 16)))))
-                .addContainerGap(87, Short.MAX_VALUE))
+                        .addComponent(jLabel4)
+                        .addGap(204, 204, 204))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(JRrestar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(JRsumar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(16, 16, 16))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(52, 52, 52)))))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TXStockActual, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtStockCambio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
+                    .addComponent(txtStockCambio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TXStockActual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(63, 63, 63)
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(66, 66, 66))
         );
 
         javax.swing.GroupLayout jdAjusteLayout = new javax.swing.GroupLayout(jdAjuste.getContentPane());
         jdAjuste.getContentPane().setLayout(jdAjusteLayout);
         jdAjusteLayout.setHorizontalGroup(
             jdAjusteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jdAjusteLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jdAjusteLayout.setVerticalGroup(
             jdAjusteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -828,31 +888,6 @@ public class Bodega extends javax.swing.JFrame {
         yMouse = evt.getY();        // TODO add your handling code here:
     }//GEN-LAST:event_jPanel1MousePressed
 
-    private void txtStockCambioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtStockCambioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtStockCambioActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    jdAjuste.setVisible(false);         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    jdAjuste.setVisible(false);      // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jPanel3MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseDragged
-        // TODO add your handling code here:
-        int x = evt.getXOnScreen();
-        int y = evt.getYOnScreen();
-        
-        jdAjuste.setLocation(x - xxMouse, y - yyMouse);
-    }//GEN-LAST:event_jPanel3MouseDragged
-
-    private void jPanel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MousePressed
-        xxMouse = evt.getX();
-        yyMouse = evt.getY(); 
-    }//GEN-LAST:event_jPanel3MousePressed
-
     private void tablaInsumosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInsumosMousePressed
         // TODO add your handling code here:
     }//GEN-LAST:event_tablaInsumosMousePressed
@@ -872,20 +907,78 @@ public class Bodega extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         int stockCambio = Integer.parseInt(txtStockCambio.getText());
         int stockActual = Integer.parseInt(TXStockActual.getText());
-       if( stockCambio < stockActual && txDescripcion.getText().equals("")){
-           JOptionPane.showMessageDialog(null, "el campo de Descripcion no puede estar Vacios cuando resta Stock", "Error de Actualizar Stock", JOptionPane.WARNING_MESSAGE);
-       };
-        String cons = "UPDATE INSUMO SET STOCK_ACTUAL = "+txtStockCambio.getText()+" WHERE ID_INSUMO = "+Codigo.getText()+"" ;
-            try{
-              Statement stm = conn.createStatement();
-              stm.executeUpdate(cons);
-              JOptionPane.showMessageDialog(null, "Insumo actualizado !", "Insumo actualizado", JOptionPane.INFORMATION_MESSAGE);
-              }catch(SQLException ex){
-               JOptionPane.showMessageDialog(null, "Error al actualizado", "Error de actualizado", JOptionPane.ERROR_MESSAGE);
-                }
-        jdAjuste.setVisible(false); 
+        String letra;
+        if( JRrestar.isEnabled() && txDescripcion.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "el campo de Descripcion no puede estar Vacios cuando resta Stock", "Error de Actualizar Stock", JOptionPane.WARNING_MESSAGE);
+        };
+        if(JRrestar.isSelected()){
+        stockActual = stockActual - stockCambio;
+        letra = "R";
+        
+        }else{
+        stockActual = stockActual + stockCambio;
+        letra = "S";
+        }
+        
+        String cons = "UPDATE INSUMO SET STOCK_ACTUAL = "+String.valueOf(stockActual)+" WHERE ID_INSUMO = "+Codigo.getText()+"" ;
+        try{
+            Statement stm = conn.createStatement();
+            stm.executeUpdate(cons);
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "Error al actualizado", "Error de actualizado", JOptionPane.ERROR_MESSAGE);
+        };
+        
+        String cons1 = "Insert into AJUSTE (DESCRIPCION,FECHA,HORA,CANTIDAD,TIPO_AJUSTE,ID_INSUMO,RUT_EMPLEADO) values  ('"+txDescripcion.getText()+"',sysdate,CURRENT_TIMESTAMP,"+String.valueOf(stockActual)+",'"+letra+"',"+Codigo.getText()+",'"+ rut_empleado+"')";
+        try{
+            System.out.println(cons1);
+            Statement stm = conn.createStatement();
+            stm.executeUpdate(cons1);
+            JOptionPane.showMessageDialog(null, "Insumo ajustado !", "Insumo ajustado", JOptionPane.INFORMATION_MESSAGE);
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "Error ajuste "+ ex, "Error de ajustado", JOptionPane.ERROR_MESSAGE);
+        };
+        jdAjuste.setVisible(false);
         llenarTabla();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        jdAjuste.setVisible(false);      // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void txtStockCambioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtStockCambioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtStockCambioActionPerformed
+
+    private void jPanel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MousePressed
+        xxMouse = evt.getX();
+        yyMouse = evt.getY();
+    }//GEN-LAST:event_jPanel3MousePressed
+
+    private void jPanel3MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseDragged
+        // TODO add your handling code here:
+        int x = evt.getXOnScreen();
+        int y = evt.getYOnScreen();
+
+        jdAjuste.setLocation(x - xxMouse, y - yyMouse);
+    }//GEN-LAST:event_jPanel3MouseDragged
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        jdAjuste.setVisible(false);         // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void TXStockActualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TXStockActualActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TXStockActualActionPerformed
+
+    private void JRsumarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JRsumarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_JRsumarActionPerformed
+
+    private void txtStockCambioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtStockCambioKeyTyped
+        int key = evt.getKeyChar(); 
+        boolean numeros = key >= 48 && key <= 57;   
+        if (!numeros)evt.consume();        // TODO add your handling code here:
+    }//GEN-LAST:event_txtStockCambioKeyTyped
 
     
     public static void main(String args[]) {
@@ -899,6 +992,8 @@ public class Bodega extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Codigo;
+    private javax.swing.JRadioButton JRrestar;
+    private javax.swing.JRadioButton JRsumar;
     private javax.swing.JLabel NombreInsumo;
     private javax.swing.JTextField TXStockActual;
     private javax.swing.JButton btnAgregar;
@@ -909,6 +1004,7 @@ public class Bodega extends javax.swing.JFrame {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnEliminar;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cmbTipoInsumo;
     private javax.swing.JComboBox<String> cmbUnidadMedida;
     private javax.swing.JButton jButton1;
