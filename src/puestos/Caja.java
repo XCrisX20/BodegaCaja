@@ -1,7 +1,11 @@
 
 package puestos;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import javax.swing.JOptionPane;
 import java.sql.*;
 import java.text.DecimalFormat;
@@ -12,7 +16,16 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import principal.Conexion;
 import principal.Login;
-
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Image;
+import java.io.FileOutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Caja extends javax.swing.JFrame {
     Conexion conex = new Conexion();
@@ -20,13 +33,7 @@ public class Caja extends javax.swing.JFrame {
     private String rut_empleado;
     int xMouse;
     int yMouse;
-    
-    //Para Archivos
-    private JFileChooser fc = new JFileChooser();
-    private File archivoElegido;
-    private String valor = null;
-    private FileNameExtensionFilter filter;
-    
+    DecimalFormat formato = new DecimalFormat("$ #,###");
     
     
     public Caja(String rut_empleado) {
@@ -259,14 +266,85 @@ public class Caja extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel1MouseDragged
 
     private void btnCerrarCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarCajaActionPerformed
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int respuesta = fc.showOpenDialog(null);
-        if (respuesta == JFileChooser.APPROVE_OPTION) {
-            archivoElegido = fc.getSelectedFile();
-            valor = archivoElegido.getPath() + "/";
-
+        String dateTime = DateTimeFormatter.ofPattern("YYYY-MM").format(LocalDateTime.now()); //Devuelve Fecha formato 2022-08
+        
+        File fichero = new File("src/principal/rutaReportes.txt"); //buscamos la ruta donde guardar reportes
+        if(!fichero.exists()) {
+            JOptionPane.showMessageDialog(null, "No hay una ruta especificada para la creacion de los reportes, por favor configurela en ADMINISTRACION", "Configure la ruta para reportes", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-        System.out.println(valor);
+        
+        FileReader fr;
+        String ruta = ""; //obtenemos la ruta
+        try {
+            fr = new FileReader(fichero);
+            BufferedReader br = new BufferedReader(fr);
+            ruta = br.readLine();
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex);
+            JOptionPane.showMessageDialog(null, "Ruta no Encontrada","Error de ruta",JOptionPane.ERROR_MESSAGE);
+            return;
+        } catch (IOException e) {
+            System.out.println(e);
+            JOptionPane.showMessageDialog(null, "No se pudo leer el archivo","Error de lectura",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        //aca creamos ruta para el guardado de carpetas mensuales // c:/user/juan/documents/prueba/{{2022-08}}
+        File fichero2 = new File(ruta+"/"+dateTime);
+        
+        if(!fichero2.exists()){ // si el fichero no existe, se procede a crearlo
+            if(!fichero2.mkdir()){
+                JOptionPane.showMessageDialog(null, "No se pudo crear el fichero especificado","Error al crear fichero",JOptionPane.ERROR_MESSAGE);
+            }
+        }else{ //si el fichero existe se guardan los archivos diarios en el
+            String dateTime2 = DateTimeFormatter.ofPattern("MM-dd").format(LocalDateTime.now());
+            File fichero3 = new File(ruta + "/" + dateTime + "/" + dateTime2+".pdf");
+            
+            Document documento = new Document();
+            try{
+                PdfWriter.getInstance(documento, new FileOutputStream(fichero3));
+                
+                documento.open();
+                PdfPTable tabla = new PdfPTable(5);
+                tabla.addCell("ID");
+                tabla.addCell("Fecha");
+                tabla.addCell("Tipo Pago");
+                tabla.addCell("Total");
+                tabla.addCell("Vendedor");
+                
+                String cons = "Select id_venta, fecha_hora, tipo_pago, total_pago, nombre_completo from ventas, empleadott where estado_venta = 'A' and ventas.rut_empleado = empleadott.rut_empleado";
+                String total;
+                try{
+                    Statement stm = conn.createStatement();
+                    ResultSet rs = stm.executeQuery(cons);
+                    
+                    while(rs.next()){
+                        total = formato.format(rs.getInt("total_pago"));
+                        tabla.addCell(String.valueOf(rs.getInt("id_venta")));
+                        tabla.addCell(rs.getString("fecha_hora"));
+                        if(rs.getString("tipo_pago").equalsIgnoreCase("E")){
+                            tabla.addCell("Efectivo");
+                        }else{
+                            tabla.addCell("Debito");
+                        }
+                        tabla.addCell(total);
+                        tabla.addCell(rs.getString("nombre_completo"));
+                        
+                        
+                    }
+                    
+                }catch(SQLException ex){
+                    JOptionPane.showMessageDialog(null, "Error al obtener los datos de las ventas", "Error de Obtencion", JOptionPane.ERROR_MESSAGE);
+                }
+                documento.add(tabla);
+                
+            }catch(DocumentException | FileNotFoundException ex){
+                System.out.println(ex);
+            }
+            documento.close();
+            JOptionPane.showMessageDialog(null, "Reporte Creado y Caja Cerrada Exitosamente!", "Caja Cerrada",JOptionPane.INFORMATION_MESSAGE);
+        }
+        
     }//GEN-LAST:event_btnCerrarCajaActionPerformed
 
     

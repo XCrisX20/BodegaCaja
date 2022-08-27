@@ -1,9 +1,21 @@
 
 package puestos;
 
+import java.awt.HeadlessException;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import principal.Conexion;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import principal.Login;
 
 public class Admin extends javax.swing.JFrame {
@@ -13,6 +25,12 @@ public class Admin extends javax.swing.JFrame {
     
     int xMouse;
     int yMouse;
+    
+    //Para Archivos
+    private JFileChooser fc = new JFileChooser();
+    private File archivoElegido;
+    private String valor = null;
+    private FileNameExtensionFilter filter;
     
     public Admin() {
         initComponents();
@@ -53,11 +71,11 @@ public class Admin extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         btn_cerrarSesion = new javax.swing.JButton();
         lblTitulo = new javax.swing.JLabel();
+        btnCambiarRuta = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(600, 500));
         setSize(new java.awt.Dimension(600, 500));
 
         panelAdmin.setBackground(new java.awt.Color(86, 101, 115));
@@ -75,7 +93,7 @@ public class Admin extends javax.swing.JFrame {
                 btnVerUsuariosActionPerformed(evt);
             }
         });
-        panelAdmin.add(btnVerUsuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 110, 160, 50));
+        panelAdmin.add(btnVerUsuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 80, 160, 50));
 
         btnVerVentas.setBackground(new java.awt.Color(40, 105, 133));
         btnVerVentas.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
@@ -88,7 +106,7 @@ public class Admin extends javax.swing.JFrame {
                 btnVerVentasActionPerformed(evt);
             }
         });
-        panelAdmin.add(btnVerVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 230, 160, 50));
+        panelAdmin.add(btnVerVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 190, 160, 50));
 
         btnGestionarProductos.setBackground(new java.awt.Color(40, 105, 133));
         btnGestionarProductos.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
@@ -101,7 +119,7 @@ public class Admin extends javax.swing.JFrame {
                 btnGestionarProductosActionPerformed(evt);
             }
         });
-        panelAdmin.add(btnGestionarProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 350, 160, 50));
+        panelAdmin.add(btnGestionarProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 410, 160, 50));
 
         panel1.setBackground(new java.awt.Color(40, 105, 133));
         panel1.setName(""); // NOI18N
@@ -287,6 +305,19 @@ public class Admin extends javax.swing.JFrame {
 
         panelAdmin.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 600, 50));
 
+        btnCambiarRuta.setBackground(new java.awt.Color(40, 105, 133));
+        btnCambiarRuta.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        btnCambiarRuta.setForeground(new java.awt.Color(255, 255, 255));
+        btnCambiarRuta.setText("Cambiar Ruta Reportes");
+        btnCambiarRuta.setBorder(null);
+        btnCambiarRuta.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCambiarRuta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCambiarRutaActionPerformed(evt);
+            }
+        });
+        panelAdmin.add(btnCambiarRuta, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 290, 160, 50));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -432,6 +463,76 @@ public class Admin extends javax.swing.JFrame {
         this.setLocation(x - xMouse, y - yMouse);
     }//GEN-LAST:event_jPanel1MouseDragged
 
+    private void btnCambiarRutaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarRutaActionPerformed
+        
+        File fichero = new File("src/principal/rutaReportes.txt");
+        if(!fichero.exists()) {
+            try {
+                fichero.createNewFile();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "No se pudo crear el archivo con la ruta necesaria", "Error de ruta",JOptionPane.ERROR_MESSAGE);
+            }
+        }else{
+            try {
+                FileReader fr = new FileReader(fichero);
+                BufferedReader br = new BufferedReader(fr);
+                String linea = br.readLine();
+                
+                if(!linea.equalsIgnoreCase("")){
+                    int opcion = JOptionPane.showConfirmDialog(null, "Ya hay una ruta en: "+linea+" Deseas Cambiarla?", "¿Cambiar Ruta?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    switch(opcion){
+                        case 0:
+                            break;
+                        case 2:
+                            JOptionPane.showMessageDialog(null, "Cambio Cancelado", "Cambio Cancelado",JOptionPane.INFORMATION_MESSAGE);
+                            return;
+                    }
+                }
+            } catch (FileNotFoundException ex) {
+                System.out.println(ex);
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+        
+        try{
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int respuesta = fc.showOpenDialog(null);
+            if (respuesta == JFileChooser.APPROVE_OPTION) {
+                archivoElegido = fc.getSelectedFile();
+                valor = archivoElegido.getPath() + "/";
+            }
+        }catch(HeadlessException ex){
+            valor = null;
+        }
+        
+        if(valor == null){
+            JOptionPane.showMessageDialog(null, "No se a escogido una Ruta", "Ruta Sin Elegir", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(fichero));
+            bw.write("");
+            bw.close();
+        } catch (IOException ex) {
+            System.out.println(ex);;
+        }
+        
+        try{
+            String filePath = "src/principal/rutaReportes.txt";
+            FileWriter fw = new FileWriter(filePath, true);    
+            String lineToAppend = valor;    
+            fw.write(lineToAppend);
+            fw.close();
+        }catch(IOException e){
+            JOptionPane.showMessageDialog(null, "No se Pudo Agregar la ruta", "Error al Agregar", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        
+        
+    }//GEN-LAST:event_btnCambiarRutaActionPerformed
+
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -467,6 +568,7 @@ public class Admin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarUsuario;
+    private javax.swing.JButton btnCambiarRuta;
     private javax.swing.JButton btnGestionarProductos;
     private javax.swing.JButton btnVerUsuarios;
     private javax.swing.JButton btnVerVentas;
