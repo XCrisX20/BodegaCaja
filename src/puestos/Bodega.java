@@ -25,6 +25,7 @@ public class Bodega extends javax.swing.JFrame {
         tablaInsumos.setAutoCreateRowSorter(false);
         llenarCombo();
         this.setLocationRelativeTo(this);
+        txtStockCambio.setText("0");
     }
     public Bodega(String rut_empleado) {
         this.rut_empleado = rut_empleado;
@@ -213,6 +214,7 @@ public class Bodega extends javax.swing.JFrame {
         );
 
         txtStockCambio.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txtStockCambio.setText("0");
         txtStockCambio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtStockCambioActionPerformed(evt);
@@ -739,32 +741,34 @@ public class Bodega extends javax.swing.JFrame {
     
     
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-          if (txtStockCambio.getText().equals("")){
-      JOptionPane.showMessageDialog(null, "el campo de Stock no puede estar Vacios", "Error de Actualizar Stock", JOptionPane.WARNING_MESSAGE);
-      return;
-          }
+        if (txtStockCambio.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "el campo de Stock no puede estar Vacios", "Error al Actualizar Stock", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         int stockCambio = Integer.parseInt(txtStockCambio.getText());
         int stockActual = Integer.parseInt(TXStockActual.getText());
         String letra;
-        if( JRrestar.isSelected() && txDescripcion.getText().equals("")){
-            JOptionPane.showMessageDialog(null, "el campo de Descripcion no puede estar Vacios cuando resta Stock", "Error de Actualizar Stock", JOptionPane.WARNING_MESSAGE);
+        if(JRrestar.isSelected() && txDescripcion.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "El campo de Descripcion no puede estar Vacio cuando se resta Stock", "Error al Actualizar Stock", JOptionPane.WARNING_MESSAGE);
             return;
-        };
-        if(JRrestar.isSelected()){
-        stockActual = stockActual - stockCambio;
-        letra = "R";
-        
-        }else{
-        stockActual = stockActual + stockCambio;
-        letra = "S";
         }
-         String cons = "UPDATE INSUMO SET STOCK_ACTUAL = "+String.valueOf(stockActual)+" WHERE ID_INSUMO = "+Codigo.getText()+"" ;
+        
+        if(JRrestar.isSelected()){
+            stockActual = stockActual - stockCambio;
+            letra = "R";
+        }else{
+            stockActual = stockActual + stockCambio;
+            letra = "S";
+        }
+        
+        
+        String cons = "UPDATE INSUMO SET STOCK_ACTUAL = "+String.valueOf(stockActual)+" WHERE ID_INSUMO = "+Codigo.getText()+"" ;
         try{
             Statement stm = conn.createStatement();
             stm.executeUpdate(cons);
         }catch(SQLException ex){
-            JOptionPane.showMessageDialog(null, "Error al actualizado", "Error de actualizado", JOptionPane.ERROR_MESSAGE);
-        };
+            JOptionPane.showMessageDialog(null, "Error al actualizar el Stock del Insumo", "Error de actualizacion", JOptionPane.ERROR_MESSAGE);
+        }
         
         String cons1 = "Insert into AJUSTE (DESCRIPCION,FECHA,HORA,CANTIDAD,TIPO_AJUSTE,ID_INSUMO,RUT_EMPLEADO) values  ('"+txDescripcion.getText()+"',sysdate,CURRENT_TIMESTAMP,"+String.valueOf(stockActual)+",'"+letra+"',"+Codigo.getText()+",'"+ rut_empleado+"')";
         try{
@@ -774,7 +778,7 @@ public class Bodega extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Insumo ajustado !", "Insumo ajustado", JOptionPane.INFORMATION_MESSAGE);
         }catch(SQLException ex){
             JOptionPane.showMessageDialog(null, "Error ajuste "+ ex, "Error de ajustado", JOptionPane.ERROR_MESSAGE);
-        };
+        }
         jdAjuste.setVisible(false);
         llenarTabla();
         
@@ -983,7 +987,7 @@ public class Bodega extends javax.swing.JFrame {
     private void tablaInsumosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInsumosMouseClicked
         // TODO add your handling code here:
         int row = tablaInsumos.getSelectedRow();
-        txtStockCambio.setText("");
+        txtStockCambio.setText("0");
         txDescripcion.setText("");
         DefaultTableModel model = (DefaultTableModel)tablaInsumos.getModel();
         NombreInsumo.setText(model.getValueAt(row, 1).toString());
