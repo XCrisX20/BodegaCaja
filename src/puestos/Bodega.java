@@ -631,7 +631,7 @@ public class Bodega extends javax.swing.JFrame {
                 .addGap(27, 27, 27))
         );
 
-        panelBodega.add(panelBotones, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 530, 450, 60));
+        panelBodega.add(panelBotones, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 530, 450, 60));
         panelBodega.add(txtBuscarNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 120, 200, 30));
 
         btnBuscar1.setBackground(new java.awt.Color(40, 105, 133));
@@ -887,7 +887,13 @@ public class Bodega extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnAjustesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjustesActionPerformed
-        jdAjuste.setVisible(true);
+        if (tablaInsumos.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(null, "Debe Seleccionar una sola fila", "Seleccion Incorrecta", JOptionPane.WARNING_MESSAGE);
+            }
+            else{
+                    jdAjuste.setVisible(true);
+                    }
+        
 
     }//GEN-LAST:event_btnAjustesActionPerformed
 
