@@ -753,8 +753,11 @@ public class Bodega extends javax.swing.JFrame {
         stockActual = stockActual + stockCambio;
         letra = "S";
         }
-        
-        String cons = "UPDATE INSUMO SET STOCK_ACTUAL = "+String.valueOf(stockActual)+" WHERE ID_INSUMO = "+Codigo.getText()+"" ;
+        if (txtStockCambio.getText().equals("")){
+      JOptionPane.showMessageDialog(null, "el campo de Stock no puede estar Vacios", "Error de Actualizar Stock", JOptionPane.WARNING_MESSAGE);
+
+        }else{
+         String cons = "UPDATE INSUMO SET STOCK_ACTUAL = "+String.valueOf(stockActual)+" WHERE ID_INSUMO = "+Codigo.getText()+"" ;
         try{
             Statement stm = conn.createStatement();
             stm.executeUpdate(cons);
@@ -773,6 +776,8 @@ public class Bodega extends javax.swing.JFrame {
         };
         jdAjuste.setVisible(false);
         llenarTabla();
+        }
+       
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
