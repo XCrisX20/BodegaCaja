@@ -34,6 +34,10 @@ public class Bodega extends javax.swing.JFrame {
         llenarCombo();
         this.setLocationRelativeTo(this);
     }
+    boolean tryParseInt(String value) { 
+        try { Integer.parseInt(value); return true; } 
+        catch(NumberFormatException nfe) { return false; } 
+    }
     
     void llenarCombo(){
         cmbTipoInsumo.removeAllItems();
@@ -461,12 +465,22 @@ public class Bodega extends javax.swing.JFrame {
 
         cmbUnidadMedida.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        txtStockCritico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtStockCriticoActionPerformed(evt);
+            }
+        });
         txtStockCritico.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtStockCriticoKeyTyped(evt);
             }
         });
 
+        txtStockActual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtStockActualActionPerformed(evt);
+            }
+        });
         txtStockActual.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtStockActualKeyTyped(evt);
@@ -715,61 +729,6 @@ public class Bodega extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     
-    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
-        this.setVisible(false);
-        Login log = new Login();
-        log.setVisible(true);
-    }//GEN-LAST:event_btnCerrarSesionActionPerformed
-
-    private void cmbTipoInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoInsumoActionPerformed
-        
-    }//GEN-LAST:event_cmbTipoInsumoActionPerformed
-
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        borrarCampos();
-        panelDatos.setEnabled(false);
-        panelBotones.setEnabled(true);
-        txtID.setEnabled(true);
-        txtBuscarNombre.setEnabled(true);
-        btnAgregar.setText("Agregar");
-    }//GEN-LAST:event_btnCancelarActionPerformed
-
-    private void txtStockActualKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtStockActualKeyTyped
-        int key = evt.getKeyChar();
-
-        boolean numeros = key >= 48 && key <= 57;
-        
-        if (!numeros)evt.consume();
-    }//GEN-LAST:event_txtStockActualKeyTyped
-
-    private void txtStockCriticoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtStockCriticoKeyTyped
-        int key = evt.getKeyChar();
-
-        boolean numeros = key >= 48 && key <= 57;
-        
-        if (!numeros)evt.consume();
-        
-    }//GEN-LAST:event_txtStockCriticoKeyTyped
-
-    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
-        int key = evt.getKeyChar();
-
-        boolean mayusculas = key >= 65 && key <= 90;
-        boolean minusculas = key >= 97 && key <= 122;
-        boolean espacio = key == 32;
-
-         if (!(minusculas || mayusculas || espacio))
-        {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtNombreKeyTyped
-
-    private void btnAgregarInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarInsumoActionPerformed
-        panelDatos.setEnabled(true);
-        panelBotones.setEnabled(false);
-        txtNombre.requestFocus();
-    }//GEN-LAST:event_btnAgregarInsumoActionPerformed
-
     void borrarCampos(){
         txtNombre.setText("");
         cmbTipoInsumo.setSelectedIndex(0);
@@ -779,131 +738,6 @@ public class Bodega extends javax.swing.JFrame {
     }
     
     
-    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        if (btnAgregar.getText().equals("Agregar")){
-            String nombre = txtNombre.getText();
-            String tipo_insumo = cmbTipoInsumo.getItemAt(cmbTipoInsumo.getSelectedIndex());
-            String unidad_medida = cmbUnidadMedida.getItemAt(cmbUnidadMedida.getSelectedIndex());
-
-            if (nombre.isEmpty() || txtStockActual.getText().equals("") || txtStockActual.getText() == null || txtStockCritico.getText().equals("") || txtStockCritico.getText() == null){
-                JOptionPane.showMessageDialog(null, "No deben haber Campos Vacios", "Advertencia", JOptionPane.WARNING_MESSAGE);
-            }else{
-                int stock_actual = Integer.parseInt(txtStockActual.getText());
-                int stock_critico = Integer.parseInt(txtStockCritico.getText());
-                String cons = "Insert into insumo (nombre, tipo_insumo, stock_actual, stock_critico, unidad_medida)"+
-                    "values('"+nombre+"','"+tipo_insumo+"',"+stock_actual+","+stock_critico+",'"+unidad_medida+"')";
-                try{
-                    Statement stm = conn.createStatement();
-                    stm.executeUpdate(cons);
-                }catch(SQLException ex){
-                    JOptionPane.showMessageDialog(null, "No se Pudo guardar", "Error de Guardado", JOptionPane.ERROR);
-                }
-                llenarTabla();
-                borrarCampos();
-                txtNombre.requestFocus();
-            }
-        }        
-    }//GEN-LAST:event_btnAgregarActionPerformed
-
-    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        
-        
-        if (tablaInsumos.getSelectedRow() == -1){
-            JOptionPane.showMessageDialog(null, "Debe Seleccionar una sola fila", "Seleccion Incorrecta", JOptionPane.WARNING_MESSAGE);
-        }else{
-            DefaultTableModel mdl = (DefaultTableModel) tablaInsumos.getModel();
-            String id = String.valueOf(mdl.getValueAt(tablaInsumos.getSelectedRow(), 0));
-            int opcion = JOptionPane.showConfirmDialog(null, "¿Estas Seguro de Eliminar El Insumo con id: "+id+"?", "Eliminacion", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            switch(opcion){
-                case 0:
-                    String cons = "Delete from insumo where id_insumo = "+id;
-                    try {
-                        Statement stm = conn.createStatement();
-                        stm.executeUpdate(cons);
-                        JOptionPane.showMessageDialog(null, "Se ha eliminado Correctamente","Eliminacion Concretada", JOptionPane.INFORMATION_MESSAGE);
-                        break;
-                    } catch (SQLException e) {
-                        JOptionPane.showMessageDialog(null, "No se Pudo Eliminar", "Eliminacion Fallida", JOptionPane.ERROR);
-                        break;
-                    }
-                case 2:
-                    JOptionPane.showMessageDialog(null, "Eliminacion Cancelada", "Eliminacion Cancelada",JOptionPane.INFORMATION_MESSAGE);
-                    break;
-            }
-        }
-        llenarTabla();
-        
-        
-        
-    }//GEN-LAST:event_btnEliminarActionPerformed
-
-    private void txtIDKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIDKeyPressed
-        /*DefaultTableModel mdl = (DefaultTableModel) tablaInsumos.getModel();
-        mdl.setRowCount(0);
-        String cons = "Select * from insumo where nombre like '"+txtID.getText()+"%'";
-        try {
-            Statement stm = conn.createStatement();
-            ResultSet rs = stm.executeQuery(cons);
-            while(rs.next()){
-                mdl.addRow(new Object[]{rs.getInt("id_insumo"), rs.getString("nombre"),rs.getString("tipo_insumo"),rs.getInt("stock_actual"),rs.getInt("stock_critico"),rs.getString("unidad_medida")});
-            }    
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "No se Pudieron Cargar los Insumos", "Busqueda Fallida", JOptionPane.ERROR);         
-        }*/
-    }//GEN-LAST:event_txtIDKeyPressed
-
-    private void txtIDInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtIDInputMethodTextChanged
-        
-    }//GEN-LAST:event_txtIDInputMethodTextChanged
-
-    private void txtIDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIDKeyTyped
-        DefaultTableModel mdl = (DefaultTableModel) tablaInsumos.getModel();
-        mdl.setRowCount(0);
-        String cons = "Select * from insumo where nombre like '%"+txtID.getText()+"%'";
-        try {
-            Statement stm = conn.createStatement();
-            ResultSet rs = stm.executeQuery(cons);
-            while(rs.next()){
-                mdl.addRow(new Object[]{rs.getInt("id_insumo"), rs.getString("nombre"),rs.getString("tipo_insumo"),rs.getInt("stock_actual"),rs.getInt("stock_critico"),rs.getString("unidad_medida")});
-            }    
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "No se Pudieron Cargar los Insumos", "Busqueda Fallida", JOptionPane.ERROR);         
-        }
-    }//GEN-LAST:event_txtIDKeyTyped
-
-    private void btnAjustesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjustesActionPerformed
-     jdAjuste.setVisible(true);
-        
-    }//GEN-LAST:event_btnAjustesActionPerformed
-
-    private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseDragged
-        int x = evt.getXOnScreen();
-        int y = evt.getYOnScreen();
-        
-        this.setLocation(x - xMouse, y - yMouse);
-    }//GEN-LAST:event_jPanel1MouseDragged
-
-    private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
-        xMouse = evt.getX();
-        yMouse = evt.getY();        // TODO add your handling code here:
-    }//GEN-LAST:event_jPanel1MousePressed
-
-    private void tablaInsumosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInsumosMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tablaInsumosMousePressed
-
-    private void tablaInsumosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInsumosMouseClicked
-        // TODO add your handling code here:
-        int row = tablaInsumos.getSelectedRow();
-        txtStockCambio.setText("");
-        txDescripcion.setText("");
-        DefaultTableModel model = (DefaultTableModel)tablaInsumos.getModel();
-        NombreInsumo.setText(model.getValueAt(row, 1).toString());
-        TXStockActual.setText(model.getValueAt(row, 3).toString());
-        Codigo.setText(model.getValueAt(row, 0).toString());
-        
-    }//GEN-LAST:event_tablaInsumosMouseClicked
-
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         int stockCambio = Integer.parseInt(txtStockCambio.getText());
         int stockActual = Integer.parseInt(TXStockActual.getText());
@@ -979,6 +813,206 @@ public class Bodega extends javax.swing.JFrame {
         boolean numeros = key >= 48 && key <= 57;   
         if (!numeros)evt.consume();        // TODO add your handling code here:
     }//GEN-LAST:event_txtStockCambioKeyTyped
+
+    private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
+        xMouse = evt.getX();
+        yMouse = evt.getY();        // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel1MousePressed
+
+    private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseDragged
+        int x = evt.getXOnScreen();
+        int y = evt.getYOnScreen();
+
+        this.setLocation(x - xMouse, y - yMouse);
+    }//GEN-LAST:event_jPanel1MouseDragged
+
+    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
+        this.setVisible(false);
+        Login log = new Login();
+        log.setVisible(true);
+    }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
+    private void btnAgregarInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarInsumoActionPerformed
+        panelDatos.setEnabled(true);
+        panelBotones.setEnabled(false);
+        txtNombre.requestFocus();
+    }//GEN-LAST:event_btnAgregarInsumoActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+
+        if (tablaInsumos.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(null, "Debe Seleccionar una sola fila", "Seleccion Incorrecta", JOptionPane.WARNING_MESSAGE);
+        }else{
+            DefaultTableModel mdl = (DefaultTableModel) tablaInsumos.getModel();
+            String id = String.valueOf(mdl.getValueAt(tablaInsumos.getSelectedRow(), 0));
+            int opcion = JOptionPane.showConfirmDialog(null, "¿Estas Seguro de Eliminar El Insumo con id: "+id+"?", "Eliminacion", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            switch(opcion){
+                case 0:
+                  String cons1 = "select count(*) as cantidad from insumos_productos where id_insumo = "+id;
+                    try{
+                        Statement stm = conn.createStatement();
+                        ResultSet rs = stm.executeQuery(cons1);
+                        if(rs.next()){
+                            if(rs.getInt("cantidad") != 0){
+                                JOptionPane.showMessageDialog(null, "No se puede Eliminar ya que aun hay Producto asociados a este insumo", "No se pudo Eliminar", JOptionPane.WARNING_MESSAGE);
+                                break;
+                            }
+                        }
+                    }catch(SQLException ex){
+                        JOptionPane.showMessageDialog(null, "Error al Obtener los Insumos del Producto", "Error de obtencion", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+                String cons = "Delete from insumo where id_insumo = "+id;
+                try {
+                    Statement stm = conn.createStatement();
+                    stm.executeUpdate(cons);
+                    JOptionPane.showMessageDialog(null, "Se ha eliminado Correctamente","Eliminacion Concretada", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(null, "No se Pudo Eliminar", "Eliminacion Fallida", JOptionPane.ERROR);
+                    break;
+                }
+                case 2:
+                JOptionPane.showMessageDialog(null, "Eliminacion Cancelada", "Eliminacion Cancelada",JOptionPane.INFORMATION_MESSAGE);
+                break;
+            }
+        }
+        llenarTabla();
+
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnAjustesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjustesActionPerformed
+        jdAjuste.setVisible(true);
+
+    }//GEN-LAST:event_btnAjustesActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        borrarCampos();
+        panelDatos.setEnabled(false);
+        panelBotones.setEnabled(true);
+        txtID.setEnabled(true);
+        txtBuscarNombre.setEnabled(true);
+        btnAgregar.setText("Agregar");
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        if (btnAgregar.getText().equals("Agregar")){
+            String nombre = txtNombre.getText();
+            String tipo_insumo = cmbTipoInsumo.getItemAt(cmbTipoInsumo.getSelectedIndex());
+            String unidad_medida = cmbUnidadMedida.getItemAt(cmbUnidadMedida.getSelectedIndex());
+
+            if (nombre.isEmpty() || txtStockActual.getText().equals("") || txtStockActual.getText() == null
+                || txtStockCritico.getText().equals("") || txtStockCritico.getText() == null || tryParseInt(txtStockActual.getText())
+                || tryParseInt(txtStockCritico.getText())){
+                JOptionPane.showMessageDialog(null, "No deben haber Campos Vacios O uno de los campos tiene letra donde no debe", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }else{
+                int stock_actual = Integer.parseInt(txtStockActual.getText());
+                int stock_critico = Integer.parseInt(txtStockCritico.getText());
+                String cons = "Insert into insumo (nombre, tipo_insumo, stock_actual, stock_critico, unidad_medida)"+
+                "values('"+nombre+"','"+tipo_insumo+"',"+stock_actual+","+stock_critico+",'"+unidad_medida+"')";
+                try{
+                    Statement stm = conn.createStatement();
+                    stm.executeUpdate(cons);
+                }catch(SQLException ex){
+                    JOptionPane.showMessageDialog(null, "No se Pudo guardar", "Error de Guardado", JOptionPane.ERROR);
+                }
+                llenarTabla();
+                borrarCampos();
+                txtNombre.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
+        int key = evt.getKeyChar();
+
+        boolean mayusculas = key >= 65 && key <= 90;
+        boolean minusculas = key >= 97 && key <= 122;
+        boolean espacio = key == 32;
+
+        if (!(minusculas || mayusculas || espacio))
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreKeyTyped
+
+    private void cmbTipoInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoInsumoActionPerformed
+
+    }//GEN-LAST:event_cmbTipoInsumoActionPerformed
+
+    private void txtStockActualKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtStockActualKeyTyped
+        int key = evt.getKeyChar();
+
+        boolean numeros = key >= 48 && key <= 57;
+
+        if (!numeros)evt.consume();
+    }//GEN-LAST:event_txtStockActualKeyTyped
+
+    private void txtStockActualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtStockActualActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtStockActualActionPerformed
+
+    private void txtStockCriticoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtStockCriticoKeyTyped
+        int key = evt.getKeyChar();
+        boolean numeros = key >= 48 && key <= 57;
+
+        if (!numeros)evt.consume();
+
+    }//GEN-LAST:event_txtStockCriticoKeyTyped
+
+    private void txtStockCriticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtStockCriticoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtStockCriticoActionPerformed
+
+    private void tablaInsumosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInsumosMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tablaInsumosMousePressed
+
+    private void tablaInsumosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInsumosMouseClicked
+        // TODO add your handling code here:
+        int row = tablaInsumos.getSelectedRow();
+        txtStockCambio.setText("");
+        txDescripcion.setText("");
+        DefaultTableModel model = (DefaultTableModel)tablaInsumos.getModel();
+        NombreInsumo.setText(model.getValueAt(row, 1).toString());
+        TXStockActual.setText(model.getValueAt(row, 3).toString());
+        Codigo.setText(model.getValueAt(row, 0).toString());
+
+    }//GEN-LAST:event_tablaInsumosMouseClicked
+
+    private void txtIDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIDKeyTyped
+        DefaultTableModel mdl = (DefaultTableModel) tablaInsumos.getModel();
+        mdl.setRowCount(0);
+        String cons = "Select * from insumo where nombre like '%"+txtID.getText()+"%'";
+        try {
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery(cons);
+            while(rs.next()){
+                mdl.addRow(new Object[]{rs.getInt("id_insumo"), rs.getString("nombre"),rs.getString("tipo_insumo"),rs.getInt("stock_actual"),rs.getInt("stock_critico"),rs.getString("unidad_medida")});
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "No se Pudieron Cargar los Insumos", "Busqueda Fallida", JOptionPane.ERROR);
+        }
+    }//GEN-LAST:event_txtIDKeyTyped
+
+    private void txtIDKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIDKeyPressed
+        /*DefaultTableModel mdl = (DefaultTableModel) tablaInsumos.getModel();
+        mdl.setRowCount(0);
+        String cons = "Select * from insumo where nombre like '"+txtID.getText()+"%'";
+        try {
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery(cons);
+            while(rs.next()){
+                mdl.addRow(new Object[]{rs.getInt("id_insumo"), rs.getString("nombre"),rs.getString("tipo_insumo"),rs.getInt("stock_actual"),rs.getInt("stock_critico"),rs.getString("unidad_medida")});
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "No se Pudieron Cargar los Insumos", "Busqueda Fallida", JOptionPane.ERROR);
+        }*/
+    }//GEN-LAST:event_txtIDKeyPressed
+
+    private void txtIDInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtIDInputMethodTextChanged
+
+    }//GEN-LAST:event_txtIDInputMethodTextChanged
 
     
     public static void main(String args[]) {

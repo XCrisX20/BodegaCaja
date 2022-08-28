@@ -694,11 +694,13 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtStockCritico">
               <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtStockCriticoActionPerformed"/>
                 <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtStockCriticoKeyTyped"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="txtStockActual">
               <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtStockActualActionPerformed"/>
                 <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtStockActualKeyTyped"/>
               </Events>
             </Component>
