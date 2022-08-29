@@ -312,7 +312,6 @@ public class Productos extends javax.swing.JFrame {
 
         jdAgregarProducto.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         jdAgregarProducto.setTitle("Agregar Producto");
-        jdAgregarProducto.setPreferredSize(new java.awt.Dimension(500, 500));
         jdAgregarProducto.setSize(new java.awt.Dimension(500, 500));
         jdAgregarProducto.setType(java.awt.Window.Type.POPUP);
 
@@ -672,7 +671,7 @@ public class Productos extends javax.swing.JFrame {
             }
             
             for(String e: insumos){
-                String cons2 = "select * from insumo, insumos_productos where insumo.id_insumo = insumos_productos.id_insumo and insumo.id_insumo = "+Integer.parseInt(e);
+                String cons2 = "select * from insumo, insumos_productos where insumo.id_insumo = insumos_productos.id_insumo and insumo.id_insumo = "+Integer.parseInt(e)+" and insumos_productos.id_producto = "+idProducto;
                 Statement stm2 = conn.createStatement();
                 ResultSet rs2 = stm2.executeQuery(cons2);
                 

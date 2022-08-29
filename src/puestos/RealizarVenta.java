@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import modelos.InsumosProductos;
 import principal.Conexion;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
@@ -21,6 +22,8 @@ public class RealizarVenta extends javax.swing.JFrame {
     Connection conn = conex.realizarConexion();
     private String rut_empleado;
     private ArrayList<Producto> productos_lista = new ArrayList<>();
+    private ArrayList<Integer> idsProductos = new ArrayList<>();
+    private ArrayList<InsumosProductos> ins_prod = new ArrayList<>();
     Timestamp fecha_guardar;
     int idVenta = 0;
     int xMouse;
@@ -39,6 +42,7 @@ public class RealizarVenta extends javax.swing.JFrame {
         llenarComboBox();
         agregarBuscador();
         configurarFecha_Hora();
+        lblAyuda.setToolTipText("Los productos sin insumos asociados no apareceran listados aca.");
     }
     
     public RealizarVenta() {}
@@ -121,7 +125,7 @@ public class RealizarVenta extends javax.swing.JFrame {
     }
     
     private void llenarComboBox(){
-        String cons = "Select * from producto";
+        String cons = "select p.nombre from insumos_productos ip, producto p where ip.id_producto = p.id_producto group by p.nombre";
         try{
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery(cons);
@@ -154,6 +158,7 @@ public class RealizarVenta extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         txtTotal = new javax.swing.JTextField();
         btnEliminar = new javax.swing.JButton();
+        lblAyuda = new javax.swing.JLabel();
         jdVentasPendientes = new javax.swing.JDialog();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -284,6 +289,14 @@ public class RealizarVenta extends javax.swing.JFrame {
             }
         });
         jPanel4.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 360, 130, 30));
+
+        lblAyuda.setBackground(new java.awt.Color(153, 255, 153));
+        lblAyuda.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblAyuda.setForeground(new java.awt.Color(255, 255, 255));
+        lblAyuda.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblAyuda.setText("?");
+        lblAyuda.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 51)));
+        jPanel4.add(lblAyuda, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, 20, 30));
 
         javax.swing.GroupLayout jdAgregarProductoLayout = new javax.swing.GroupLayout(jdAgregarProducto.getContentPane());
         jdAgregarProducto.getContentPane().setLayout(jdAgregarProductoLayout);
@@ -725,6 +738,8 @@ public class RealizarVenta extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnAgregarColaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarColaActionPerformed
+        ins_prod.clear();
+        idsProductos.clear();
         if(productos_lista.isEmpty()){
             JOptionPane.showMessageDialog(null, "No se han Asociado Productos a la venta","Venta sin productos", JOptionPane.WARNING_MESSAGE);
             return;
@@ -770,9 +785,11 @@ public class RealizarVenta extends javax.swing.JFrame {
         //Guardar Registros de los productos de la venta
         if (idVenta != 0){
            String cons3 = "";
+           idsProductos.clear();
             for(Producto e: productos_lista){
                 cons3 = "Insert into productos_venta (id_producto, id_venta, cantidad)"
                     + "values("+e.getId_producto()+","+idVenta+","+e.getCantidad()+")";
+                idsProductos.add(e.getId_producto());
                 try{
                     Statement stm3 = conn.createStatement();
                     stm3.executeUpdate(cons3);
@@ -780,6 +797,58 @@ public class RealizarVenta extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Error al Ingresar el Producto asociado a la venta "+ex, "Error de Insercion", JOptionPane.ERROR_MESSAGE);
                 }
             } 
+            
+            String cons4;
+            for (Integer i: idsProductos){
+                cons4 = "Select *  from insumos_productos where id_producto = "+i;
+                try{
+                    Statement stm4 = conn.createStatement();
+                    ResultSet rs4 = stm4.executeQuery(cons4);
+                    while(rs4.next()){
+                        InsumosProductos insProd = new InsumosProductos();
+                        insProd.setId_insumo(rs4.getInt("id_insumo"));
+                        insProd.setId_producto(rs4.getInt("id_producto"));
+                        insProd.setStock_restante(rs4.getInt("stock_rest"));
+                        System.out.println(rs4.getInt("stock_rest"));
+                        ins_prod.add(insProd);
+                    }
+                }catch(SQLException ex){
+                    JOptionPane.showMessageDialog(null, "No se pudo obtener los insumos de los productos","Error de obtencion", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            
+            System.out.println("----");
+            String cons5;
+            String cons6;
+            double stock_nuevo;
+            for(InsumosProductos e: ins_prod){
+                int idInsumoARestar = e.getId_insumo(); //obtener insumo de la lista
+                double cantRestar = e.getStock_restante(); //la cantidad usada del insumo
+                cons5 = "Select * from insumo where id_insumo = "+idInsumoARestar; //obtener el insumo completo
+                try{
+                    Statement stm5 = conn.createStatement();
+                    ResultSet rs5 = stm5.executeQuery(cons5);
+                    if(rs5.next()){
+                        
+                        int stock_actual = rs5.getInt("stock_actual"); //obtener el insumo actual de ese 
+                        stock_nuevo = stock_actual - cantRestar; //nuevo stockk
+                        System.out.println(stock_actual + " - " + cantRestar+" = " + stock_nuevo);
+                        cons6 = "update insumo set stock_actual = "+stock_nuevo+" where id_insumo = "+idInsumoARestar; //insumo actualizado
+                        Statement stm6 = conn.createStatement();
+                        stm6.executeUpdate(cons6);
+                    }
+                }catch(SQLException ex){
+                    JOptionPane.showMessageDialog(null, "No se pudo obtener el insumo","Error de obtencion", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+            }
+            
+            
+            
+            
+            
+            
         }
         
         
@@ -926,6 +995,7 @@ public class RealizarVenta extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JDialog jdAgregarProducto;
     private javax.swing.JDialog jdVentasPendientes;
+    private javax.swing.JLabel lblAyuda;
     private javax.swing.JRadioButton rbDebito;
     private javax.swing.JRadioButton rbEfectivo;
     private javax.swing.JRadioButton rbEncargo;
