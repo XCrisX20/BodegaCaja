@@ -61,16 +61,36 @@ public class Bodega extends javax.swing.JFrame {
         try{
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery("Select * from insumo");
-            
             while (rs.next()){
+                if (rs.getInt("stock_actual") <= rs.getInt("stock_critico")){
+       JOptionPane.showMessageDialog(null, "El insumo "+rs.getString("nombre").toString()+" Esta bajo en stock", "Advertencia", JOptionPane.WARNING_MESSAGE);
+
+                }
                 modelo.addRow(new Object[]{rs.getInt("id_insumo"), rs.getString("nombre"),rs.getString("tipo_insumo"),rs.getInt("stock_actual"),rs.getInt("stock_critico"),rs.getString("unidad_medida")});
+                
             }
             tablaInsumos.setModel(modelo);
         }catch(SQLException ex){
             JOptionPane.showMessageDialog(null, "Error al Conectar a la BD", "Error de Conexion", JOptionPane.ERROR);
         }
     }
-
+ 
+    void llenarTabla1(){
+        DefaultTableModel mdl = (DefaultTableModel) tablaInsumos.getModel();
+        mdl.setRowCount(0);
+        DefaultTableModel modelo = (DefaultTableModel) tablaInsumos.getModel();
+        try{
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery("Select * from insumo");
+            while (rs.next()){
+                modelo.addRow(new Object[]{rs.getInt("id_insumo"), rs.getString("nombre"),rs.getString("tipo_insumo"),rs.getInt("stock_actual"),rs.getInt("stock_critico"),rs.getString("unidad_medida")});
+                
+            }
+            tablaInsumos.setModel(modelo);
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "Error al Conectar a la BD", "Error de Conexion", JOptionPane.ERROR);
+        }
+    }
     
     
     
@@ -135,7 +155,6 @@ public class Bodega extends javax.swing.JFrame {
         jdAjuste.setLocationByPlatform(true);
         jdAjuste.setModal(true);
         jdAjuste.setUndecorated(true);
-        jdAjuste.setPreferredSize(new java.awt.Dimension(556, 535));
         jdAjuste.setSize(new java.awt.Dimension(556, 535));
         jdAjuste.setType(java.awt.Window.Type.POPUP);
 
@@ -414,13 +433,18 @@ public class Bodega extends javax.swing.JFrame {
             tablaInsumos.getColumnModel().getColumn(5).setResizable(false);
         }
 
-        panelBodega.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 160, 640, 360));
+        panelBodega.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 160, 700, 360));
 
         txtID.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
                 txtIDInputMethodTextChanged(evt);
+            }
+        });
+        txtID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIDActionPerformed(evt);
             }
         });
         txtID.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -438,6 +462,11 @@ public class Bodega extends javax.swing.JFrame {
         btnBuscar.setText("Buscar");
         btnBuscar.setBorder(null);
         btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
         panelBodega.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 120, 110, 30));
 
         panelDatos.setBackground(new java.awt.Color(40, 105, 133));
@@ -633,7 +662,7 @@ public class Bodega extends javax.swing.JFrame {
                 .addGap(27, 27, 27))
         );
 
-        panelBodega.add(panelBotones, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 530, 450, 60));
+        panelBodega.add(panelBotones, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 530, 450, 60));
         panelBodega.add(txtBuscarNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 120, 200, 30));
 
         btnBuscar1.setBackground(new java.awt.Color(40, 105, 133));
@@ -641,6 +670,11 @@ public class Bodega extends javax.swing.JFrame {
         btnBuscar1.setText("Buscar");
         btnBuscar1.setBorder(null);
         btnBuscar1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBuscar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscar1ActionPerformed(evt);
+            }
+        });
         panelBodega.add(btnBuscar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 120, 110, 30));
 
         btnAgregarInsumo.setBackground(new java.awt.Color(40, 105, 133));
@@ -720,7 +754,7 @@ public class Bodega extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBodega, javax.swing.GroupLayout.DEFAULT_SIZE, 1110, Short.MAX_VALUE)
+            .addComponent(panelBodega, javax.swing.GroupLayout.PREFERRED_SIZE, 1110, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -770,7 +804,7 @@ public class Bodega extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error al actualizar el Stock del Insumo", "Error de actualizacion", JOptionPane.ERROR_MESSAGE);
         }
         
-        String cons1 = "Insert into AJUSTE (DESCRIPCION,FECHA,HORA,CANTIDAD,TIPO_AJUSTE,ID_INSUMO,RUT_EMPLEADO) values  ('"+txDescripcion.getText()+"',sysdate,CURRENT_TIMESTAMP,"+String.valueOf(stockActual)+",'"+letra+"',"+Codigo.getText()+",'"+ rut_empleado+"')";
+        String cons1 = "Insert into AJUSTE (DESCRIPCION,FECHA_HORA,CANTIDAD,TIPO_AJUSTE,ID_INSUMO,RUT_EMPLEADO) values  ('"+txDescripcion.getText()+"',sysdate,"+String.valueOf(stockActual)+",'"+letra+"',"+Codigo.getText()+",'"+ rut_empleado+"')";
         try{
             System.out.println(cons1);
             Statement stm = conn.createStatement();
@@ -779,8 +813,8 @@ public class Bodega extends javax.swing.JFrame {
         }catch(SQLException ex){
             JOptionPane.showMessageDialog(null, "Error ajuste "+ ex, "Error de ajustado", JOptionPane.ERROR_MESSAGE);
         }
+        llenarTabla1();
         jdAjuste.setVisible(false);
-        llenarTabla();
         
        
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -872,6 +906,20 @@ public class Bodega extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "Error al Obtener los Insumos del Producto", "Error de obtencion", JOptionPane.ERROR_MESSAGE);
                         break;
                     }
+                    String cons2 = "select count(*) as cantidad from ajuste where id_insumo = "+id;
+                    try{
+                        Statement stm = conn.createStatement();
+                        ResultSet rs = stm.executeQuery(cons2);
+                        if(rs.next()){
+                            if(rs.getInt("cantidad") != 0){
+                                JOptionPane.showMessageDialog(null, "No se puede Eliminar porque hay un ajuste asociados a este insumo", "No se pudo Eliminar", JOptionPane.WARNING_MESSAGE);
+                                break;
+                            }
+                        }
+                    }catch(SQLException ex){
+                        JOptionPane.showMessageDialog(null, "Error al Obtener los Insumos del Producto", "Error de obtencion", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
                 String cons = "Delete from insumo where id_insumo = "+id;
                 try {
                     Statement stm = conn.createStatement();
@@ -887,7 +935,7 @@ public class Bodega extends javax.swing.JFrame {
                 break;
             }
         }
-        llenarTabla();
+        llenarTabla1();
 
     }//GEN-LAST:event_btnEliminarActionPerformed
 
@@ -918,10 +966,23 @@ public class Bodega extends javax.swing.JFrame {
             String unidad_medida = cmbUnidadMedida.getItemAt(cmbUnidadMedida.getSelectedIndex());
 
             if (nombre.isEmpty() || txtStockActual.getText().equals("") || txtStockActual.getText() == null
-                || txtStockCritico.getText().equals("") || txtStockCritico.getText() == null || tryParseInt(txtStockActual.getText())
-                || tryParseInt(txtStockCritico.getText())){
+                || txtStockCritico.getText().equals("") || txtStockCritico.getText() == null){
                 JOptionPane.showMessageDialog(null, "No deben haber Campos Vacios O uno de los campos tiene letra donde no debe", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }else{
+                String cons_insumo= "Select * from insumo";
+            try{
+                Statement stm_insumo = conn.createStatement();
+                ResultSet rs_insumo = stm_insumo.executeQuery(cons_insumo);
+                while(rs_insumo.next()){
+                   if(rs_insumo.getString("nombre").trim().toUpperCase().equals(nombre.trim().toUpperCase()))
+                   {
+                   JOptionPane.showMessageDialog(null, "Ya existe un insumo con ese nombre", "Error de obtencion", JOptionPane.ERROR_MESSAGE);
+                   return;
+                   };
+                }
+            }catch(SQLException ex){
+                JOptionPane.showMessageDialog(null, "Error al obtener los productos", "Error de obtencion", JOptionPane.ERROR_MESSAGE);
+            }
                 int stock_actual = Integer.parseInt(txtStockActual.getText());
                 int stock_critico = Integer.parseInt(txtStockCritico.getText());
                 String cons = "Insert into insumo (nombre, tipo_insumo, stock_actual, stock_critico, unidad_medida)"+
@@ -932,7 +993,7 @@ public class Bodega extends javax.swing.JFrame {
                 }catch(SQLException ex){
                     JOptionPane.showMessageDialog(null, "No se Pudo guardar", "Error de Guardado", JOptionPane.ERROR);
                 }
-                llenarTabla();
+                llenarTabla1();
                 borrarCampos();
                 txtNombre.requestFocus();
             }
@@ -997,18 +1058,7 @@ public class Bodega extends javax.swing.JFrame {
     }//GEN-LAST:event_tablaInsumosMouseClicked
 
     private void txtIDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIDKeyTyped
-        DefaultTableModel mdl = (DefaultTableModel) tablaInsumos.getModel();
-        mdl.setRowCount(0);
-        String cons = "Select * from insumo where nombre like '%"+txtID.getText()+"%'";
-        try {
-            Statement stm = conn.createStatement();
-            ResultSet rs = stm.executeQuery(cons);
-            while(rs.next()){
-                mdl.addRow(new Object[]{rs.getInt("id_insumo"), rs.getString("nombre"),rs.getString("tipo_insumo"),rs.getInt("stock_actual"),rs.getInt("stock_critico"),rs.getString("unidad_medida")});
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "No se Pudieron Cargar los Insumos", "Busqueda Fallida", JOptionPane.ERROR);
-        }
+        
     }//GEN-LAST:event_txtIDKeyTyped
 
     private void txtIDKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIDKeyPressed
@@ -1029,6 +1079,40 @@ public class Bodega extends javax.swing.JFrame {
     private void txtIDInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtIDInputMethodTextChanged
 
     }//GEN-LAST:event_txtIDInputMethodTextChanged
+
+    private void txtIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIDActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+    DefaultTableModel mdl = (DefaultTableModel) tablaInsumos.getModel();
+        mdl.setRowCount(0);
+        String cons = "Select * from insumo where id_insumo like '"+txtID.getText().trim()+"%'";
+        try {
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery(cons);
+            while(rs.next()){ 
+                mdl.addRow(new Object[]{rs.getInt("id_insumo"), rs.getString("nombre"),rs.getString("tipo_insumo"),rs.getInt("stock_actual"),rs.getInt("stock_critico"),rs.getString("unidad_medida")});
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "No se Pudieron Cargar los Insumos", "Busqueda Fallida", JOptionPane.ERROR);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnBuscar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscar1ActionPerformed
+        DefaultTableModel mdl = (DefaultTableModel) tablaInsumos.getModel();
+        mdl.setRowCount(0);
+        String cons = "Select * from insumo where lower(nombre) like '"+txtBuscarNombre.getText().trim().toLowerCase()+"%'";
+        try {
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery(cons);
+            while(rs.next()){ 
+                mdl.addRow(new Object[]{rs.getInt("id_insumo"), rs.getString("nombre"),rs.getString("tipo_insumo"),rs.getInt("stock_actual"),rs.getInt("stock_critico"),rs.getString("unidad_medida")});
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "No se Pudieron Cargar los Insumos", "Busqueda Fallida", JOptionPane.ERROR);
+        }             // TODO add your handling code here:
+    }//GEN-LAST:event_btnBuscar1ActionPerformed
 
     
     public static void main(String args[]) {
